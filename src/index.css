@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+/* ── Vestly Design Tokens ── */
+:root {
+  --brand-1: #408A71;
+  --brand-2: #285A48;
+  --brand-3: #B0E4CC;
+  --accent:  #408A71;
+}
+
+/* ── Dark Theme ── */
+[data-theme="dark"] {
+  --bg-base:        #091413;
+  --bg-card:        #0e1e1b;
+  --bg-elevated:    #142620;
+  --bg-hover:       rgba(64,138,113,0.08);
+  --border:         #1e3d33;
+  --border-subtle:  rgba(40,90,72,0.4);
+  --text-primary:   #cee8dc;
+  --text-secondary: #7eb89e;
+  --text-muted:     #3d6b58;
+  --accent-text:    #408A71;
+  --green-up:       #4ade80;
+  --red-down:       #f87171;
+  --shadow:         rgba(0,0,0,0.7);
+}
+
+/* ── Light Theme ── */
+[data-theme="light"] {
+  --bg-base:        #f0f2f6;
+  --bg-card:        #ffffff;
+  --bg-elevated:    #f8f9fb;
+  --bg-hover:       rgba(0,0,0,0.04);
+  --border:         #e5e7eb;
+  --border-subtle:  rgba(0,0,0,0.06);
+  --text-primary:   #111827;
+  --text-secondary: #6b7280;
+  --text-muted:     #9ca3af;
+  --accent-text:    #1a2035;
+  --green-up:       #22c55e;
+  --red-down:       #ef4444;
+  --shadow:         rgba(0,0,0,0.08);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* ── Light mode — Tailwind overrides ── */
+[data-theme="light"] {
+  & .text-white    { color: var(--text-primary)   !important; }
+  & .text-gray-100 { color: var(--text-primary)   !important; }
+  & .text-gray-200 { color: var(--text-primary)   !important; }
+  & .text-gray-300 { color: var(--text-secondary) !important; }
+  & .text-gray-400 { color: var(--text-secondary) !important; }
+  & .text-gray-500 { color: var(--text-muted)     !important; }
+  & .text-gray-600 { color: var(--text-muted)     !important; }
+  & .text-gray-700 { color: var(--border)         !important; }
+
+  & .bg-gray-900     { background-color: var(--bg-base)     !important; }
+  & .bg-gray-800     { background-color: var(--bg-card)     !important; }
+  & .bg-gray-700     { background-color: var(--bg-elevated) !important; }
+  & .bg-gray-700\/10 { background-color: rgba(0,0,0,0.03)   !important; }
+  & .bg-gray-700\/20 { background-color: rgba(0,0,0,0.05)   !important; }
+  & .bg-gray-700\/30 { background-color: rgba(0,0,0,0.06)   !important; }
+  & .bg-gray-700\/40 { background-color: rgba(0,0,0,0.07)   !important; }
+  & .bg-gray-700\/50 { background-color: rgba(0,0,0,0.08)   !important; }
+
+  & .border-gray-700      { border-color: var(--border)        !important; }
+  & .border-gray-700\/40  { border-color: var(--border-subtle) !important; }
+  & .border-gray-700\/50  { border-color: var(--border-subtle) !important; }
+  & .border-gray-600      { border-color: var(--border)        !important; }
+
+  & thead tr { background-color: var(--bg-elevated) !important; }
+  & ::placeholder { color: var(--text-muted) !important; }
+
+  /* flash animations light */
+  & .flash-green { animation: flash-green-light 0.7s ease; }
+  & .flash-red   { animation: flash-red-light   0.7s ease; }
+}
+
+@keyframes flash-green-light {
+  0%, 100% { background-color: var(--bg-card); }
+  40% { background-color: rgba(22,163,74,0.12); }
+}
+@keyframes flash-red-light {
+  0%, 100% { background-color: var(--bg-card); }
+  40% { background-color: rgba(220,38,38,0.1); }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #285A48; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #408A71; }
+
+/* ── Flash animations ── */
+@keyframes flash-green {
+  0%, 100% { background-color: var(--bg-card); }
+  40% { background-color: rgba(16,185,129,0.18); }
+}
+@keyframes flash-red {
+  0%, 100% { background-color: var(--bg-card); }
+  40% { background-color: rgba(239,68,68,0.18); }
+}
+.flash-green { animation: flash-green 0.7s ease; }
+.flash-red   { animation: flash-red   0.7s ease; }
+
+/* ── Gradient text ── */
+.gradient-text {
+  background: linear-gradient(135deg, #B0E4CC, #408A71, #285A48);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+[data-theme="light"] .gradient-text {
+  background: linear-gradient(135deg, #1a2035, #374151);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Primary button ── */
+.btn-primary {
+  background: linear-gradient(135deg, #285A48, #408A71);
+  box-shadow: 0 2px 16px rgba(40,90,72,0.4);
+  transition: all 0.2s;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1e4336, #337860);
+  box-shadow: 0 4px 24px rgba(40,90,72,0.55);
+  transform: translateY(-1px);
+}
+[data-theme="light"] .btn-primary {
+  background: linear-gradient(135deg, #1a2035, #374151);
+  box-shadow: 0 2px 12px rgba(26,32,53,0.25);
+}
+[data-theme="light"] .btn-primary:hover {
+  background: linear-gradient(135deg, #111827, #1f2937);
+  box-shadow: 0 4px 20px rgba(26,32,53,0.35);
+}
+
+/* ── Card ── */
+.card-hover { transition: all 0.2s; }
+.card-hover:hover {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px rgba(64,138,113,0.2), 0 8px 32px var(--shadow);
+  transform: translateY(-1px);
+}
