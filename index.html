@@ -2,10 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/logo.png" sizes="any" />
+    <link rel="icon" type="image/png" href="./logo.png" sizes="any" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vestly — Invest Smarter</title>
     <script>
+      // Restore path after GitHub Pages 404 redirect
+      ;(function() {
+        var redirect = sessionStorage.getItem('redirect');
+        if (redirect) {
+          sessionStorage.removeItem('redirect');
+          if (redirect !== window.location.pathname + window.location.search + window.location.hash) {
+            window.history.replaceState(null, '', redirect);
+          }
+        }
+      })();
+      // Theme init
       ;(function() {
         var saved = localStorage.getItem('vestly-theme') || 'system'
         var resolved = saved === 'system'

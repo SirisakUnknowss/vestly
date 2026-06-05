@@ -13,7 +13,7 @@ import './index.css'
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/vestly">
       <Routes>
         <Route path="/stock/:symbol" element={<StockDetail />} />
         <Route element={<Layout><Routes>
