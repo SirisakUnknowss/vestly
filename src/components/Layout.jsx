@@ -5,6 +5,7 @@ import {
   Target, Sun, Moon, Monitor
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme'
+import logoUrl from '/logo.png'
 
 const NAV = [
   { to: '/',          icon: Home,        label: 'Markets'    },
@@ -43,7 +44,7 @@ export default function Layout({ children }) {
 
           {/* Logo */}
           <button onClick={() => navigate('/')} className="flex items-center gap-2 shrink-0">
-            <img src="/logo.png" alt="Vestly" className="w-8 h-8 rounded-xl object-contain" />
+            <img src={logoUrl} alt="Vestly" className="w-8 h-8 rounded-xl object-contain" />
             <span className="font-black text-lg tracking-tight gradient-text">Vestly</span>
           </button>
 
