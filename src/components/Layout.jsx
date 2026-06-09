@@ -5,6 +5,7 @@ import {
   Target, Sun, Moon, Monitor
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme'
+import { useVisitorCount } from '../hooks/useVisitorCount'
 import logoUrl from '/logo.png'
 
 const NAV = [
@@ -26,6 +27,7 @@ export default function Layout({ children }) {
   const navigate = useNavigate()
   const { theme, setTheme, resolved } = useTheme()
   const [themeMenuOpen, setThemeMenuOpen] = useState(false)
+  const visitorCount = useVisitorCount()
 
   const currentIcon = THEME_OPTIONS.find(o => o.id === theme)?.icon ?? Monitor
 
@@ -97,10 +99,20 @@ export default function Layout({ children }) {
 
       {/* ── Footer ── */}
       <footer className="border-t py-4 text-center" style={{ borderColor: 'var(--border)' }}>
-        <p className="text-xs text-gray-600">
+        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
           <span className="gradient-text font-bold">Vestly</span>
           {' '}· Invest Smarter, Start Earlier · ข้อมูลเพื่อการศึกษาเท่านั้น ไม่ใช่คำแนะนำการลงทุน
         </p>
+        {visitorCount !== null && (
+          <p className="text-xs mt-1.5 flex items-center justify-center gap-1.5" style={{ color: 'var(--text-muted)' }}>
+            <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', backgroundColor: '#408A71' }} />
+            ผู้เยี่ยมชมทั้งหมด{' '}
+            <span className="font-semibold" style={{ color: 'var(--accent-text)' }}>
+              {visitorCount.toLocaleString()}
+            </span>
+            {' '}ครั้ง
+          </p>
+        )}
       </footer>
 
       {/* ── Floating Theme Toggle ── */}
