@@ -20,7 +20,7 @@ export function useVisitorCount() {
         },
       })
         .then(r => r.json())
-        .then(data => setCount(data[0]?.count ?? null))
+        .then(data => setCount(Number(data[0]?.count ?? 0)))
         .catch(() => {})
     } else {
       // Increment counter (once per session)
@@ -33,9 +33,9 @@ export function useVisitorCount() {
         },
         body: JSON.stringify({ p_page: PAGE }),
       })
-        .then(r => r.json())
-        .then(newCount => {
-          setCount(newCount)
+        .then(r => r.text())
+        .then(text => {
+          setCount(Number(text))
           sessionStorage.setItem(SESSION_KEY, '1')
         })
         .catch(() => {})
