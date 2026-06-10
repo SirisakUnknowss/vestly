@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme'
 import { useVisitorCount } from '../hooks/useVisitorCount'
+import FeedbackWidget from './FeedbackWidget'
 import logoUrl from '/logo.png'
 
 const NAV = [
@@ -114,6 +115,9 @@ export default function Layout({ children }) {
           </p>
         )}
       </footer>
+
+      {/* ── Feedback Widget ── */}
+      <FeedbackWidget />
 
       {/* ── Floating Theme Toggle ── */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
