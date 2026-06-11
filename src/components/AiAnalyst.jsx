@@ -62,14 +62,14 @@ export default function AiAnalyst({ symbol, quote, profile, divMetric, lynchCat,
       `
 
       // 2. Call Gemini
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+      const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' })
       const result = await model.generateContent(prompt)
       const responseText = result.response.text()
 
       setAnalysis(responseText)
     } catch (err) {
       console.error(err)
-      setError('ไม่สามารถเชื่อมต่อ AI ได้ กรุณาลองใหม่อีกครั้ง')
+      setError(`ไม่สามารถเชื่อมต่อ AI ได้: ${err.message || 'กรุณาลองใหม่อีกครั้ง'}`)
     } finally {
       setLoading(false)
     }
