@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import PageTransition from '../../components/PageTransition'
 import { 
   Users, Activity, AlertTriangle, Zap, 
   CheckCircle, Clock, Server, ArrowUpRight, ArrowDownRight, BarChart2
@@ -167,7 +168,7 @@ export default function Dashboard() {
   }[path] || 'Dashboard'
 
   return (
-    <div className="space-y-6">
+    <PageTransition className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">{pageTitle}</h1>
@@ -459,6 +460,6 @@ export default function Dashboard() {
       </Card>
       )}
       
-    </div>
+    </PageTransition>
   )
 }

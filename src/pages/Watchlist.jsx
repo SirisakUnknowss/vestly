@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Star, Wifi, WifiOff, TrendingUp, TrendingDown, X, Plus } from 'lucide-react'
+import PageTransition from '../components/PageTransition'
 
 const API_KEY = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const WS_URL  = `wss://ws.finnhub.io?token=${API_KEY}`
@@ -127,7 +128,7 @@ export default function Watchlist() {
   const toggleStar = (s) => setStarred(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s])
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 py-6">
+    <PageTransition className="max-w-screen-xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-5">
         <div>
           <h1 className="text-xl font-bold">Watchlist</h1>
@@ -159,6 +160,6 @@ export default function Watchlist() {
           ))}
         </div>
       )}
-    </div>
+    </PageTransition>
   )
 }

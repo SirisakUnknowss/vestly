@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import PageTransition from '../components/PageTransition'
 import {
   Target, ChevronDown, ChevronUp, TrendingDown, TrendingUp,
   RefreshCw, CheckCircle, XCircle, AlertCircle, BarChart2,
@@ -232,8 +233,8 @@ export default function StockHunter() {
   }
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 py-6 space-y-6">
-
+    <PageTransition className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      
       {/* ── Header ── */}
       <div>
         <div className="flex items-center gap-2 mb-1">
@@ -644,6 +645,6 @@ export default function StockHunter() {
           </div>
         )}
       </div>
-    </div>
+    </PageTransition>
   )
 }

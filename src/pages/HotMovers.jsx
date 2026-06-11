@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Flame, ChevronUp, ChevronDown, RefreshCw, TrendingUp, TrendingDown } from 'lucide-react'
 import { SP500 } from '../sp500'
+import PageTransition from '../components/PageTransition'
 
 const API_KEY = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const CACHE_KEY = 'sp500_cache'
@@ -84,7 +85,7 @@ export default function HotMovers() {
   }
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 py-6">
+    <PageTransition className="max-w-screen-xl mx-auto px-4 py-6">
       <div className="flex items-center gap-2 mb-2">
         <Flame className="text-orange-400" size={22}/>
         <h1 className="text-xl font-bold">Hot Movers — S&P 500</h1>
@@ -145,6 +146,6 @@ export default function HotMovers() {
           </div>
         </div>
       </div>
-    </div>
+    </PageTransition>
   )
 }

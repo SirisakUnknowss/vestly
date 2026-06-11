@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence } from 'framer-motion'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Watchlist from './pages/Watchlist'
@@ -16,10 +17,11 @@ import Login from './pages/admin/Login'
 import AuthRoute from './components/admin/AuthRoute'
 import './index.css'
 
-function App() {
+function AppRoutes() {
+  const location = useLocation()
   return (
-    <BrowserRouter basename="/vestly">
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         <Route path="/admin" element={<AuthRoute />}>
           <Route element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
@@ -44,6 +46,14 @@ function App() {
           <Route path="*" element={null} />
         </Route>
       </Routes>
+    </AnimatePresence>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter basename="/vestly">
+      <AppRoutes />
     </BrowserRouter>
   )
 }

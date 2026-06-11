@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Star, ChevronUp, ChevronDown, Search, SlidersHorizontal, X } from 'lucide-react'
 import { STOCKS_DB, SECTORS } from '../data/stocksDB'
+import PageTransition from '../components/PageTransition'
 
 const API_KEY = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const PRICE_CACHE_KEY = 'home_price_cache_v1'
@@ -190,7 +191,7 @@ export default function Home() {
 
 
   return (
-    <div className="max-w-screen-xl mx-auto px-3 py-5">
+    <PageTransition className="max-w-screen-xl mx-auto px-3 py-5">
 
       {/* ── Hero Banner ── */}
       <div className="relative rounded-2xl overflow-hidden mb-6 p-6 sm:p-8"
@@ -342,6 +343,6 @@ export default function Home() {
           </div>
         )}
       </div>
-    </div>
+    </PageTransition>
   )
 }
