@@ -15,6 +15,8 @@ import AdminLayout from './components/admin/AdminLayout'
 import Dashboard from './pages/admin/Dashboard'
 import Login from './pages/admin/Login'
 import AuthRoute from './components/admin/AuthRoute'
+import Auth from './pages/Auth'
+import { AuthProvider } from './contexts/AuthContext'
 import './index.css'
 
 function AppRoutes() {
@@ -33,6 +35,7 @@ function AppRoutes() {
           </Route>
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/auth" element={<Auth />} />
         <Route path="/stock/:symbol" element={<StockDetail />} />
         <Route path="/cookie-policy" element={<CookiePolicy />} />
         <Route element={<Layout><Routes>
@@ -53,7 +56,9 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter basename="/vestly">
-      <AppRoutes />
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
     </BrowserRouter>
   )
 }

@@ -9,6 +9,8 @@ import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis,
   Tooltip, CartesianGrid, ReferenceLine
 } from 'recharts'
+import { useAuth } from '../contexts/AuthContext'
+import { supabase } from '../lib/supabase'
 
 const FINNHUB_KEY  = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const TWELVE_KEY   = '1b5540bb3fc342e19f36f8bcffcce177'
@@ -76,24 +78,45 @@ export default function StockDetail() {
   const [newsLoad,      setNewsLoad]      = useState(false)
   const [fetchedNewsSymbol, setFetchedNewsSymbol] = useState(null)
 
+  const { user } = useAuth()
+  
   const [lynchCat,  setLynchCat]  = useState(() => {
     try {
       const cache = JSON.parse(localStorage.getItem('lynch_classify_v1') || '{}')
       return cache[symbol] || null
     } catch { return null }
   })
-  const [starred,   setStarred]   = useState(() => {
-    try { return JSON.parse(localStorage.getItem('starred') || '[]') } catch { return [] }
-  })
+  const [starred,   setStarred]   = useState([])
   const [activeTab, setActiveTab] = useState('chart') // chart | dividend | news
 
+  useEffect(() => {
+    if (user) {
+      supabase.from('user_watchlists').select('symbol').eq('user_id', user.id).then(({ data }) => {
+        if (data) setStarred(data.map(d => d.symbol))
+      })
+    } else {
+      try { setStarred(JSON.parse(localStorage.getItem('starred') || '[]')) } catch {}
+    }
+  }, [user])
+
   const isStarred = starred.includes(symbol)
-  const toggleStar = () => {
-    setStarred(prev => {
-      const next = prev.includes(symbol) ? prev.filter(s => s !== symbol) : [...prev, symbol]
-      localStorage.setItem('starred', JSON.stringify(next))
-      return next
-    })
+  
+  const toggleStar = async () => {
+    if (!user) {
+      if (window.confirm('Please sign in to save stocks to your cloud watchlist.')) {
+        navigate('/auth')
+      }
+      return
+    }
+
+    const nextIsStarred = !isStarred
+    setStarred(prev => nextIsStarred ? [...prev, symbol] : prev.filter(s => s !== symbol))
+
+    if (nextIsStarred) {
+      await supabase.from('user_watchlists').insert({ user_id: user.id, symbol })
+    } else {
+      await supabase.from('user_watchlists').delete().match({ user_id: user.id, symbol })
+    }
   }
 
   // ── Fetch Quote + classify Lynch ────────────────────────────────

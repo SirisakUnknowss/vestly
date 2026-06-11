@@ -10,6 +10,7 @@ import { useVisitorCount } from '../hooks/useVisitorCount'
 import FeedbackWidget from './FeedbackWidget'
 import CookieConsent from './CookieConsent'
 import GlobalSearch from './GlobalSearch'
+import { useAuth } from '../contexts/AuthContext'
 import logoUrl from '/logo.png'
 
 const NAV = [
@@ -32,7 +33,9 @@ export default function Layout({ children }) {
   const { theme, setTheme, resolved } = useTheme()
   const [themeMenuOpen, setThemeMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const visitorCount = useVisitorCount()
+  const { user, profile, signOut } = useAuth()
 
   // Initialize analytics tracking
   useAnalytics()
@@ -106,6 +109,59 @@ export default function Layout({ children }) {
               <span className="text-xs leading-none">⌘</span>K
             </kbd>
           </button>
+
+          {/* User Menu */}
+          <div className="relative ml-2">
+            {user ? (
+              <>
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+                >
+                  {profile?.avatar_url ? (
+                    <img src={profile.avatar_url} alt="Avatar" className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-700" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                      {profile?.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                  )}
+                </button>
+                {userMenuOpen && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40" 
+                      onClick={() => setUserMenuOpen(false)}
+                    />
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-xl z-50 overflow-hidden">
+                      <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{profile?.full_name || 'User'}</p>
+                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                      </div>
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            signOut()
+                            setUserMenuOpen(false)
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                        >
+                          Sign out
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </>
+            ) : (
+              <button 
+                onClick={() => navigate('/auth')}
+                className="hidden sm:flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors"
+              >
+                Sign In
+              </button>
+            )}
+          </div>
+
         </div>
 
         {/* ── Mobile bottom nav ── */}

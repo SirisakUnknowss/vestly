@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Star, Wifi, WifiOff, TrendingUp, TrendingDown, X, Plus } from 'lucide-react'
 import PageTransition from '../components/PageTransition'
+import { useAuth } from '../contexts/AuthContext'
+import { supabase } from '../lib/supabase'
 
 const API_KEY = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const WS_URL  = `wss://ws.finnhub.io?token=${API_KEY}`
@@ -106,18 +108,27 @@ function Card({ symbol, ws, quote, starred, onStar, onRemove, onClick }) {
 
 export default function Watchlist() {
   const navigate = useNavigate()
+  const { user } = useAuth()
+  
   const [stocks, setStocks] = useState(() => {
     try { return JSON.parse(localStorage.getItem('stocks') || 'null') || DEFAULT } catch { return DEFAULT }
   })
-  const [starred, setStarred] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('starred') || '[]') } catch { return [] }
-  })
+  const [starred, setStarred] = useState([])
   const [input, setInput] = useState('')
   const { prices, connected, subscribe, unsubscribe } = useWS(stocks)
   const quotes = useQuotes(stocks)
 
   useEffect(() => { localStorage.setItem('stocks', JSON.stringify(stocks)) }, [stocks])
-  useEffect(() => { localStorage.setItem('starred', JSON.stringify(starred)) }, [starred])
+  
+  useEffect(() => {
+    if (user) {
+      supabase.from('user_watchlists').select('symbol').eq('user_id', user.id).then(({ data }) => {
+        if (data) setStarred(data.map(d => d.symbol))
+      })
+    } else {
+      try { setStarred(JSON.parse(localStorage.getItem('starred') || '[]')) } catch {}
+    }
+  }, [user])
 
   const add = (sym) => {
     const s = sym.trim().toUpperCase()
@@ -125,7 +136,24 @@ export default function Watchlist() {
     setInput('')
   }
   const remove = (s) => { setStocks(p => p.filter(x => x !== s)); unsubscribe(s) }
-  const toggleStar = (s) => setStarred(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s])
+  
+  const toggleStar = async (sym) => {
+    if (!user) {
+      if (window.confirm('Please sign in to save stocks to your cloud watchlist.')) {
+        navigate('/auth')
+      }
+      return
+    }
+
+    const nextIsStarred = !starred.includes(sym)
+    setStarred(p => nextIsStarred ? [...p, sym] : p.filter(x => x !== sym))
+
+    if (nextIsStarred) {
+      await supabase.from('user_watchlists').insert({ user_id: user.id, symbol: sym })
+    } else {
+      await supabase.from('user_watchlists').delete().match({ user_id: user.id, symbol: sym })
+    }
+  }
 
   return (
     <PageTransition className="max-w-screen-xl mx-auto px-4 py-6">
