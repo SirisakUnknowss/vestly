@@ -170,11 +170,11 @@ export default function StockDetail() {
   }, [symbol, activeTab, divMetric])
 
   // ── Fetch News & Sentiment ───────────────────────────────────────
-  useEffect(() => {
-    if (activeTab !== 'news') return
-    if (fetchedNewsSymbol === symbol) return
+  const fetchNews = useCallback(() => {
     setNewsLoad(true)
-
+    setNewsData(null)
+    setSentimentData(null)
+    
     const today = new Date()
     const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
     const to = today.toISOString().split('T')[0]
@@ -184,7 +184,6 @@ export default function StockDetail() {
       fetch(`https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${from}&to=${to}&token=${FINNHUB_KEY}`).then(r => r.json()),
       fetch(`https://finnhub.io/api/v1/news-sentiment?symbol=${symbol}&token=${FINNHUB_KEY}`).then(r => r.json())
     ]).then(([newsRes, sentRes]) => {
-      // Filter out news without image or summary for a cleaner UI, and take top 15
       const filteredNews = (Array.isArray(newsRes) ? newsRes : [])
         .filter(n => n.headline && n.image && n.summary)
         .slice(0, 15)
@@ -196,7 +195,13 @@ export default function StockDetail() {
       setSentimentData(null)
       setFetchedNewsSymbol(symbol)
     }).finally(() => setNewsLoad(false))
-  }, [symbol, activeTab, fetchedNewsSymbol])
+  }, [symbol])
+
+  useEffect(() => {
+    if (activeTab === 'news' && fetchedNewsSymbol !== symbol) {
+      fetchNews()
+    }
+  }, [activeTab, symbol, fetchedNewsSymbol, fetchNews])
 
   // ── Computed values ──────────────────────────────────────────
   const livePrice    = quote?.c
@@ -521,7 +526,16 @@ export default function StockDetail() {
                 )}
 
                 {/* News Feed */}
-                <h3 className="font-bold text-lg text-white mt-8 mb-4">Latest Headlines (7 Days)</h3>
+                <div className="flex items-center justify-between mt-8 mb-4">
+                  <h3 className="font-bold text-lg text-white">Latest Headlines (7 Days)</h3>
+                  <button 
+                    onClick={fetchNews}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition-colors border border-gray-700"
+                  >
+                    <RefreshCw size={14} className={newsLoad ? 'animate-spin' : ''} /> Refresh
+                  </button>
+                </div>
+                
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {newsData && newsData.length > 0 ? newsData.map((news) => (
                     <a
