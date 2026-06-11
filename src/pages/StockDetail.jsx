@@ -12,6 +12,9 @@ import {
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import AiAnalyst from '../components/AiAnalyst'
+import RiskMatcher from '../components/RiskMatcher'
+import HealthScore from '../components/HealthScore'
+import TimeMachine from '../components/TimeMachine'
 
 const FINNHUB_KEY  = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const TWELVE_KEY   = '1b5540bb3fc342e19f36f8bcffcce177'
@@ -302,6 +305,8 @@ export default function StockDetail() {
           </div>
         </div>
 
+        <RiskMatcher lynchCat={lynchCat} divYield={divMetric?.yieldTTM || 0} />
+
         {/* ── AI Analyst ── */}
         <AiAnalyst 
           symbol={symbol} 
@@ -408,6 +413,18 @@ export default function StockDetail() {
                 </ResponsiveContainer>
               </div>
             )}
+          </div>
+
+          {/* ── 101 Beginner Features ── */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 mb-4">
+            <HealthScore 
+              quote={quote} 
+              profile={profile} 
+              divMetric={divMetric} 
+              lynchCat={lynchCat} 
+              sentimentData={sentimentData} 
+            />
+            {quote && <TimeMachine symbol={symbol} currentPrice={quote.c} />}
           </div>
 
           {/* Stats */}

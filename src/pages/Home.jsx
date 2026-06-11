@@ -1,8 +1,18 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Star, ChevronUp, ChevronDown, Search, SlidersHorizontal, X } from 'lucide-react'
+import { Star, ChevronUp, ChevronDown, Search, SlidersHorizontal, X, Lightbulb } from 'lucide-react'
 import { STOCKS_DB, SECTORS } from '../data/stocksDB'
 import PageTransition from '../components/PageTransition'
+
+const DAILY_TIPS = [
+  "💡 รู้หรือไม่: 'P/E Ratio' ย่อมาจาก Price to Earnings เปรียบเทียบว่าซื้อหุ้นกี่ปีถึงจะคืนทุน ยิ่งน้อยยิ่งดี",
+  "💡 รู้หรือไม่: 'Dividend Yield' คือผลตอบแทนเงินปันผล ถ้า 5% แปลว่าซื้อ 100 บาท ได้เงินปันผล 5 บาทต่อปี",
+  "💡 เคล็ดลับมือใหม่: อย่าเพิ่งซื้อหุ้นทั้งหมดในไม้เดียว ให้ค่อยๆ ทยอยซื้อ (DCA) เพื่อลดความเสี่ยง",
+  "💡 จำไว้ว่า: หุ้นตกไม่ได้แปลว่าบริษัทกำลังจะเจ๊งเสมอไป บางทีอาจเป็นจังหวะซื้อของลดราคาก็ได้นะ!",
+  "💡 หุ้นพื้นฐานดี (Blue Chip) มักจะเป็นบริษัทใหญ่ๆ ที่เรารู้จักกันดีในชีวิตประจำวัน",
+  "💡 'EPS' (Earnings Per Share) คือกำไรต่อหุ้น ยิ่งกำไรต่อหุ้นเพิ่มขึ้นทุกปี หุ้นตัวนั้นยิ่งน่าสนใจ",
+  "💡 ปีเตอร์ ลินช์ เคยกล่าวไว้ว่า 'จงลงทุนในสิ่งที่คุณรู้จักและเข้าใจ' "
+]
 
 const API_KEY = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const PRICE_CACHE_KEY = 'home_price_cache_v1'
@@ -138,6 +148,8 @@ export default function Home() {
 
   const { data: prices, enqueue } = useLazyPrices([])
 
+  const randomTip = useMemo(() => DAILY_TIPS[Math.floor(Math.random() * DAILY_TIPS.length)], [])
+
   // Filtered + sorted
   const filtered = useMemo(() => {
     const q = search.toLowerCase()
@@ -194,7 +206,7 @@ export default function Home() {
     <PageTransition className="max-w-screen-xl mx-auto px-3 py-5">
 
       {/* ── Hero Banner ── */}
-      <div className="relative rounded-2xl overflow-hidden mb-6 p-6 sm:p-8"
+      <div className="relative rounded-2xl overflow-hidden mb-4 p-6 sm:p-8"
         style={{ background: 'linear-gradient(135deg, rgba(5,150,105,0.25) 0%, rgba(16,185,129,0.15) 60%, rgba(52,211,153,0.1) 100%)', border: '1px solid rgba(16,185,129,0.2)' }}>
         <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #10b981 0%, transparent 60%), radial-gradient(circle at 80% 20%, #34d399 0%, transparent 50%)' }}/>
         <div className="relative z-10">
@@ -206,6 +218,17 @@ export default function Home() {
             <span className="gradient-text">หุ้นอเมริกา</span> ครบทุกตัว
           </h1>
           <p className="text-gray-400 text-sm">เริ่มต้นลงทุนวันนี้ · {STOCKS_DB.length} หุ้น · กดเพื่อดูรายละเอียดและกราฟ</p>
+        </div>
+      </div>
+
+      {/* ── Vestly Academy / Daily Tips ── */}
+      <div className="mb-6 bg-gradient-to-r from-amber-500/10 to-orange-500/5 border border-amber-500/20 rounded-xl p-3 flex items-start gap-3">
+        <div className="bg-amber-500/20 p-2 rounded-lg text-amber-400 shrink-0">
+          <Lightbulb size={18} />
+        </div>
+        <div>
+          <h4 className="text-amber-400 font-bold text-xs uppercase tracking-wider mb-0.5">Vestly Academy 101</h4>
+          <p className="text-gray-300 text-sm">{randomTip}</p>
         </div>
       </div>
 
