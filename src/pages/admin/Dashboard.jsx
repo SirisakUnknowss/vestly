@@ -5,7 +5,7 @@ import PageTransition from '../../components/PageTransition'
 import { 
   Users, Activity, AlertTriangle, Zap, 
   CheckCircle, Clock, Server, ArrowUpRight, ArrowDownRight, BarChart2,
-  ShieldCheck
+  ShieldCheck, Star
 } from 'lucide-react'
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
@@ -78,8 +78,10 @@ export default function Dashboard() {
   const location = useLocation()
   
   const [activeUsers, setActiveUsers] = useState(0)
+  const [registeredUsers, setRegisteredUsers] = useState(0)
   const [pageViewData, setPageViewData] = useState([])
   const [topStocks, setTopStocks] = useState([])
+  const [mostStarred, setMostStarred] = useState([])
   const [cookieConsentData, setCookieConsentData] = useState({ accepted: 0, rejected: 0 })
   const [isLoading, setIsLoading] = useState(true)
   
@@ -144,6 +146,32 @@ export default function Dashboard() {
           const rej = consents.filter(c => c.choice === 'rejected').length
           setCookieConsentData({ accepted: acc, rejected: rej })
         }
+
+        // 5. Get Registered Users Count
+        const { count: regCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true })
+        if (regCount !== null) setRegisteredUsers(regCount)
+
+        // 6. Get Most Starred Stocks
+        const { data: starred } = await supabase.from('user_watchlists').select('symbol').limit(2000)
+        if (starred) {
+          const starCounts = starred.reduce((acc, v) => {
+            acc[v.symbol] = (acc[v.symbol] || 0) + 1
+            return acc
+          }, {})
+          
+          setMostStarred(
+            Object.entries(starCounts)
+              .map(([symbol, count], idx) => ({
+                rank: 0,
+                symbol,
+                name: 'Cloud Watchlist',
+                count,
+              }))
+              .sort((a, b) => b.count - a.count)
+              .slice(0, 5)
+              .map((s, i) => ({ ...s, rank: i + 1 }))
+          )
+        }
       } catch (e) {
         console.error("Failed to fetch analytics:", e)
       } finally {
@@ -204,10 +232,10 @@ export default function Dashboard() {
       {/* 1. KPI Cards Row */}
       {(isOverview || showUsers || showPerf || showErrors) && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {(isOverview || showUsers) && <KPICard title="Active Users" value={isLoading ? '...' : activeUsers.toString()} icon={Users} trend={0} isGood={true} subtitle="Last 5 minutes" />}
-          {(isOverview || showApi) && <KPICard title="API Calls" value="1,430/hr" icon={Activity} subtitle="76% of limit" isGood={true} />}
+          {(isOverview || showUsers) && <KPICard title="Active Live Users" value={isLoading ? '...' : activeUsers.toString()} icon={Activity} trend={0} isGood={true} subtitle="Last 5 minutes" />}
+          {(isOverview || showUsers) && <KPICard title="Total Members" value={isLoading ? '...' : registeredUsers.toString()} icon={Users} trend={0} isGood={true} subtitle="Registered profiles" />}
+          {(isOverview || showApi) && <KPICard title="API Calls" value="1,430/hr" icon={Server} subtitle="76% of limit" isGood={true} />}
           {(isOverview || showErrors) && <KPICard title="Errors" value="3" icon={AlertTriangle} trend={-2} isGood={true} subtitle="vs ytd" />}
-          {(isOverview || showPerf) && <KPICard title="Avg. LCP" value="1.8s" icon={Zap} isGood={true} subtitle="Good" />}
         </div>
       )}
 
@@ -414,39 +442,69 @@ export default function Dashboard() {
           )}
           
           {(showUsers || isOverview) && (
-            <>
-              <h4 className="text-sm font-medium text-gray-400 mb-3">Top Viewed Stocks</h4>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              <div>
+                <h4 className="text-sm font-medium text-gray-400 mb-3">Top Viewed Stocks</h4>
+                <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 text-sm">
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="bg-gray-700/50 text-gray-400 text-xs uppercase tracking-wider">
+                        <th className="p-3 font-medium">Symbol</th>
+                        <th className="p-3 font-medium">Views</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-700/50">
+                      {topStocks.length > 0 ? topStocks.map(s => (
+                        <tr key={s.symbol} className="hover:bg-gray-700/30 transition-colors">
+                          <td className="p-3">
+                            <span className="font-bold text-white block">{s.symbol}</span>
+                          </td>
+                          <td className="p-3 text-gray-300">{s.views}</td>
+                        </tr>
+                      )) : (
+                        <tr>
+                          <td colSpan="2" className="p-4 text-center text-gray-500 text-xs">
+                            No data available.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
-          <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 text-sm">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-gray-700/50 text-gray-400 text-xs uppercase tracking-wider">
-                  <th className="p-3 font-medium">Symbol</th>
-                  <th className="p-3 font-medium">Views</th>
-                  <th className="p-3 font-medium text-right">Avg Time</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-700/50">
-                {topStocks.length > 0 ? topStocks.map(s => (
-                  <tr key={s.symbol} className="hover:bg-gray-700/30 transition-colors">
-                    <td className="p-3">
-                      <span className="font-bold text-white block">{s.symbol}</span>
-                      <span className="text-xs text-gray-500 truncate max-w-[120px] block">{s.name}</span>
-                    </td>
-                    <td className="p-3 text-gray-300">{s.views}</td>
-                    <td className="p-3 text-right text-gray-400">{s.time}</td>
-                  </tr>
-                )) : (
-                  <tr>
-                    <td colSpan="3" className="p-4 text-center text-gray-500 text-xs">
-                      No stock data available yet. Configure Supabase to see real data.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-            </>
+              <div>
+                <h4 className="text-sm font-medium text-gray-400 mb-3 flex items-center gap-2">
+                  <Star size={14} className="text-yellow-400" fill="currentColor" /> Most Starred Stocks
+                </h4>
+                <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 text-sm">
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="bg-gray-700/50 text-gray-400 text-xs uppercase tracking-wider">
+                        <th className="p-3 font-medium">Symbol</th>
+                        <th className="p-3 font-medium">Stars</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-700/50">
+                      {mostStarred.length > 0 ? mostStarred.map(s => (
+                        <tr key={s.symbol} className="hover:bg-gray-700/30 transition-colors">
+                          <td className="p-3">
+                            <span className="font-bold text-white block">{s.symbol}</span>
+                          </td>
+                          <td className="p-3 text-yellow-400 font-medium">{s.count}</td>
+                        </tr>
+                      )) : (
+                        <tr>
+                          <td colSpan="2" className="p-4 text-center text-gray-500 text-xs">
+                            No data available.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           )}
         </Card>
         )}
