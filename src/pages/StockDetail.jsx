@@ -74,6 +74,7 @@ export default function StockDetail() {
   const [newsData,      setNewsData]      = useState(null)
   const [sentimentData, setSentimentData] = useState(null)
   const [newsLoad,      setNewsLoad]      = useState(false)
+  const [fetchedNewsSymbol, setFetchedNewsSymbol] = useState(null)
 
   const [lynchCat,  setLynchCat]  = useState(() => {
     try {
@@ -171,7 +172,7 @@ export default function StockDetail() {
   // ── Fetch News & Sentiment ───────────────────────────────────────
   useEffect(() => {
     if (activeTab !== 'news') return
-    if (newsData && sentimentData) return
+    if (fetchedNewsSymbol === symbol) return
     setNewsLoad(true)
 
     const today = new Date()
@@ -189,11 +190,13 @@ export default function StockDetail() {
         .slice(0, 15)
       setNewsData(filteredNews)
       setSentimentData(sentRes.sentiment || null)
+      setFetchedNewsSymbol(symbol)
     }).catch(() => {
       setNewsData([])
       setSentimentData(null)
+      setFetchedNewsSymbol(symbol)
     }).finally(() => setNewsLoad(false))
-  }, [symbol, activeTab, newsData, sentimentData])
+  }, [symbol, activeTab, fetchedNewsSymbol])
 
   // ── Computed values ──────────────────────────────────────────
   const livePrice    = quote?.c
