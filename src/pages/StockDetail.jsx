@@ -11,6 +11,7 @@ import {
 } from 'recharts'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
+import AiAnalyst from '../components/AiAnalyst'
 
 const FINNHUB_KEY  = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const TWELVE_KEY   = '1b5540bb3fc342e19f36f8bcffcce177'
@@ -293,13 +294,24 @@ export default function StockDetail() {
           <div className="text-4xl font-bold tracking-tight">
             {livePrice ? `$${livePrice.toFixed(2)}` : '—'}
           </div>
-          <div className={`flex items-center gap-1.5 mt-1.5 text-base font-semibold ${isUp ? 'text-green-400' : 'text-red-400'}`}>
+          <div className={`flex items-center gap-1.5 mt-1.5 text-base font-semibold ${isUp ? 'text-green-400' : 'text-red-400'} mb-8`}>
             {isUp ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
             <span>{displayChange != null ? `${isUp ? '+' : ''}${displayChange.toFixed(2)}` : '—'}</span>
             <span>({displayChangePct != null ? `${isUp ? '+' : ''}${displayChangePct.toFixed(2)}%` : '—'})</span>
             <span className="text-gray-500 text-sm font-normal ml-1">{showPeriodChange ? period : 'Today'}</span>
           </div>
         </div>
+
+        {/* ── AI Analyst ── */}
+        <AiAnalyst 
+          symbol={symbol} 
+          quote={quote} 
+          profile={{ metric: divMetric, ...profile }} 
+          divMetric={divMetric} 
+          lynchCat={lynchCat} 
+          newsData={newsData} 
+          sentimentData={sentimentData} 
+        />
 
         {/* ── Tabs ── */}
         <div className="flex gap-1 bg-gray-800 rounded-xl p-1 w-fit">
