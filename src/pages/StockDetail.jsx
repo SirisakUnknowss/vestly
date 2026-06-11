@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft, Star, TrendingUp, TrendingDown, RefreshCw,
-  DollarSign, Calendar, BarChart2
+  DollarSign, Calendar, BarChart2, Newspaper, ArrowUpRight, ArrowDownRight
 } from 'lucide-react'
 import { classify, LYNCH_CATEGORIES } from '../utils/peterLynch'
 import {
@@ -70,6 +70,11 @@ export default function StockDetail() {
   const [profile,   setProfile]   = useState(null)
   const [divMetric, setDivMetric] = useState(null)
   const [divLoad,   setDivLoad]   = useState(false)
+  
+  const [newsData,      setNewsData]      = useState(null)
+  const [sentimentData, setSentimentData] = useState(null)
+  const [newsLoad,      setNewsLoad]      = useState(false)
+
   const [lynchCat,  setLynchCat]  = useState(() => {
     try {
       const cache = JSON.parse(localStorage.getItem('lynch_classify_v1') || '{}')
@@ -79,7 +84,7 @@ export default function StockDetail() {
   const [starred,   setStarred]   = useState(() => {
     try { return JSON.parse(localStorage.getItem('starred') || '[]') } catch { return [] }
   })
-  const [activeTab, setActiveTab] = useState('chart') // chart | dividend
+  const [activeTab, setActiveTab] = useState('chart') // chart | dividend | news
 
   const isStarred = starred.includes(symbol)
   const toggleStar = () => {
@@ -163,6 +168,33 @@ export default function StockDetail() {
       .finally(() => setDivLoad(false))
   }, [symbol, activeTab, divMetric])
 
+  // ── Fetch News & Sentiment ───────────────────────────────────────
+  useEffect(() => {
+    if (activeTab !== 'news') return
+    if (newsData && sentimentData) return
+    setNewsLoad(true)
+
+    const today = new Date()
+    const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const to = today.toISOString().split('T')[0]
+    const from = lastWeek.toISOString().split('T')[0]
+
+    Promise.all([
+      fetch(`https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${from}&to=${to}&token=${FINNHUB_KEY}`).then(r => r.json()),
+      fetch(`https://finnhub.io/api/v1/news-sentiment?symbol=${symbol}&token=${FINNHUB_KEY}`).then(r => r.json())
+    ]).then(([newsRes, sentRes]) => {
+      // Filter out news without image or summary for a cleaner UI, and take top 15
+      const filteredNews = (Array.isArray(newsRes) ? newsRes : [])
+        .filter(n => n.headline && n.image && n.summary)
+        .slice(0, 15)
+      setNewsData(filteredNews)
+      setSentimentData(sentRes.sentiment || null)
+    }).catch(() => {
+      setNewsData([])
+      setSentimentData(null)
+    }).finally(() => setNewsLoad(false))
+  }, [symbol, activeTab, newsData, sentimentData])
+
   // ── Computed values ──────────────────────────────────────────
   const livePrice    = quote?.c
   const todayChange  = quote?.d
@@ -243,6 +275,7 @@ export default function StockDetail() {
           {[
             { id: 'chart',    icon: BarChart2,  label: 'Chart'    },
             { id: 'dividend', icon: DollarSign, label: 'Dividend' },
+            { id: 'news',     icon: Newspaper,  label: 'News'     },
           ].map(tab => (
             <button
               key={tab.id}
@@ -425,6 +458,108 @@ export default function StockDetail() {
                 </div>
               </>
             ) : null}
+          </div>
+        )}
+
+        {/* ══════════════ NEWS TAB ══════════════ */}
+        {activeTab === 'news' && (
+          <div className="space-y-6">
+            {newsLoad ? (
+              <div className="h-40 flex items-center justify-center text-gray-500 gap-2">
+                <RefreshCw size={18} className="animate-spin" /> Loading latest news & sentiment...
+              </div>
+            ) : (
+              <>
+                {/* Sentiment Hero */}
+                {sentimentData && (
+                  <div className="bg-gray-800 border border-gray-700 rounded-2xl p-5 sm:p-6 overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
+                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                      <Newspaper size={20} className="text-blue-400" /> AI Sentiment Analysis
+                    </h3>
+                    
+                    <div className="flex flex-col md:flex-row items-center gap-6 md:gap-12">
+                      {/* Overall Score */}
+                      <div className="shrink-0 text-center md:text-left">
+                        <p className="text-sm text-gray-400 mb-1">Overall Tone</p>
+                        <div className="flex items-center justify-center md:justify-start gap-2">
+                          {sentimentData.bullishPercent > sentimentData.bearishPercent ? (
+                            <ArrowUpRight size={28} className="text-green-400" />
+                          ) : sentimentData.bearishPercent > sentimentData.bullishPercent ? (
+                            <ArrowDownRight size={28} className="text-red-400" />
+                          ) : (
+                            <ArrowUpRight size={28} className="text-yellow-400" />
+                          )}
+                          <span className={`text-4xl font-black ${
+                            sentimentData.bullishPercent > sentimentData.bearishPercent ? 'text-green-400' :
+                            sentimentData.bearishPercent > sentimentData.bullishPercent ? 'text-red-400' : 'text-yellow-400'
+                          }`}>
+                            {sentimentData.bullishPercent > sentimentData.bearishPercent ? 'BULLISH' : 
+                             sentimentData.bearishPercent > sentimentData.bullishPercent ? 'BEARISH' : 'NEUTRAL'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Progress Bar */}
+                      <div className="flex-1 w-full space-y-3">
+                        <div className="flex justify-between text-sm font-semibold">
+                          <span className="text-green-400">{(sentimentData.bullishPercent * 100).toFixed(0)}% Bullish</span>
+                          <span className="text-gray-400">{(100 - (sentimentData.bullishPercent * 100) - (sentimentData.bearishPercent * 100)).toFixed(0)}% Neutral</span>
+                          <span className="text-red-400">{(sentimentData.bearishPercent * 100).toFixed(0)}% Bearish</span>
+                        </div>
+                        <div className="h-4 w-full bg-gray-900 rounded-full overflow-hidden flex">
+                          <div className="bg-green-500 h-full" style={{ width: `${sentimentData.bullishPercent * 100}%` }} />
+                          <div className="bg-gray-600 h-full" style={{ width: `${100 - (sentimentData.bullishPercent * 100) - (sentimentData.bearishPercent * 100)}%` }} />
+                          <div className="bg-red-500 h-full" style={{ width: `${sentimentData.bearishPercent * 100}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* News Feed */}
+                <h3 className="font-bold text-lg text-white mt-8 mb-4">Latest Headlines (7 Days)</h3>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {newsData && newsData.length > 0 ? newsData.map((news) => (
+                    <a
+                      key={news.id}
+                      href={news.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group flex flex-col bg-gray-800 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500/50 transition-colors"
+                    >
+                      <div className="h-40 w-full overflow-hidden bg-gray-900 shrink-0">
+                        <img 
+                          src={news.image} 
+                          alt={news.headline}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="p-4 flex flex-col flex-1">
+                        <div className="flex items-center justify-between text-[11px] text-gray-500 mb-2 uppercase font-semibold tracking-wider">
+                          <span className="truncate mr-2 text-blue-400">{news.source}</span>
+                          <span className="shrink-0">{new Date(news.datetime * 1000).toLocaleDateString()}</span>
+                        </div>
+                        <h4 className="font-bold text-white text-sm line-clamp-2 mb-2 group-hover:text-blue-400 transition-colors">
+                          {news.headline}
+                        </h4>
+                        <p className="text-gray-400 text-xs line-clamp-3 mb-4">
+                          {news.summary}
+                        </p>
+                        <div className="mt-auto pt-3 border-t border-gray-700/50 text-xs text-blue-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                          Read Full Article <ArrowUpRight size={14} />
+                        </div>
+                      </div>
+                    </a>
+                  )) : (
+                    <div className="col-span-full p-10 text-center text-gray-500 border border-dashed border-gray-700 rounded-xl">
+                      ไม่มีข่าวสารที่เกี่ยวข้องในช่วงนี้
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         )}
 
