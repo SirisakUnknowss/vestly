@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
+import { getSessionId } from '../hooks/useAnalytics'
 
 export default function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false)
@@ -12,15 +14,29 @@ export default function CookieConsent() {
     }
   }, [])
 
+  const logConsent = async (choice) => {
+    try {
+      const sessionId = getSessionId()
+      await supabase.from('cookie_consents').upsert(
+        { session_id: sessionId, choice },
+        { onConflict: 'session_id' }
+      )
+    } catch (e) {
+      console.error("Failed to log cookie consent:", e)
+    }
+  }
+
   const handleAccept = () => {
     localStorage.setItem('cookie_consent', 'accepted')
     setIsVisible(false)
+    logConsent('accepted')
     // TODO: Initialize analytics/tracking scripts here
   }
 
   const handleReject = () => {
     localStorage.setItem('cookie_consent', 'rejected')
     setIsVisible(false)
+    logConsent('rejected')
     // TODO: Ensure no tracking scripts are loaded
   }
 

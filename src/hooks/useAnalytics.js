@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
 // Generate a simple random session ID if one doesn't exist
-const getSessionId = () => {
+export const getSessionId = () => {
   let sessionId = sessionStorage.getItem('vestly_session_id')
   if (!sessionId) {
     sessionId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)

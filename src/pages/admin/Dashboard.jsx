@@ -4,7 +4,8 @@ import { supabase } from '../../lib/supabase'
 import PageTransition from '../../components/PageTransition'
 import { 
   Users, Activity, AlertTriangle, Zap, 
-  CheckCircle, Clock, Server, ArrowUpRight, ArrowDownRight, BarChart2
+  CheckCircle, Clock, Server, ArrowUpRight, ArrowDownRight, BarChart2,
+  ShieldCheck
 } from 'lucide-react'
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
@@ -79,6 +80,7 @@ export default function Dashboard() {
   const [activeUsers, setActiveUsers] = useState(0)
   const [pageViewData, setPageViewData] = useState([])
   const [topStocks, setTopStocks] = useState([])
+  const [cookieConsentData, setCookieConsentData] = useState({ accepted: 0, rejected: 0 })
   const [isLoading, setIsLoading] = useState(true)
   
   useEffect(() => {
@@ -133,6 +135,14 @@ export default function Dashboard() {
               .slice(0, 5)
               .map((s, i) => ({ ...s, rank: i + 1 }))
           )
+        }
+
+        // 4. Get Cookie Consents
+        const { data: consents } = await supabase.from('cookie_consents').select('choice')
+        if (consents) {
+          const acc = consents.filter(c => c.choice === 'accepted').length
+          const rej = consents.filter(c => c.choice === 'rejected').length
+          setCookieConsentData({ accepted: acc, rejected: rej })
         }
       } catch (e) {
         console.error("Failed to fetch analytics:", e)
@@ -203,7 +213,7 @@ export default function Dashboard() {
 
       {/* 2. Main Charts Row */}
       {showUsers && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         <Card className="lg:col-span-2">
           <h3 className="font-semibold text-white mb-4">Active Users (Last 24h)</h3>
           <div className="h-64">
@@ -231,6 +241,39 @@ export default function Dashboard() {
                 <Bar dataKey="views" fill="#10b981" radius={[0, 4, 4, 0]} barSize={24} />
               </BarChart>
             </ResponsiveContainer>
+          </div>
+        </Card>
+
+        {/* Cookie Consents */}
+        <Card>
+          <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+            <ShieldCheck size={18} className="text-emerald-400" /> Cookie Consents
+          </h3>
+          <div className="h-64 flex flex-col justify-center">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-gray-400 text-sm">Accepted</span>
+              <span className="text-white font-bold">{cookieConsentData.accepted}</span>
+            </div>
+            <div className="w-full bg-gray-800 rounded-full h-3 mb-6 overflow-hidden">
+              <div 
+                className="bg-emerald-500 h-3 rounded-full transition-all duration-1000" 
+                style={{ width: `${cookieConsentData.accepted + cookieConsentData.rejected > 0 ? (cookieConsentData.accepted / (cookieConsentData.accepted + cookieConsentData.rejected)) * 100 : 0}%` }}
+              ></div>
+            </div>
+
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-gray-400 text-sm">Rejected</span>
+              <span className="text-white font-bold">{cookieConsentData.rejected}</span>
+            </div>
+            <div className="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
+              <div 
+                className="bg-red-500 h-3 rounded-full transition-all duration-1000" 
+                style={{ width: `${cookieConsentData.accepted + cookieConsentData.rejected > 0 ? (cookieConsentData.rejected / (cookieConsentData.accepted + cookieConsentData.rejected)) * 100 : 0}%` }}
+              ></div>
+            </div>
+            <div className="mt-8 text-center text-xs text-gray-500">
+              Total Responses: {cookieConsentData.accepted + cookieConsentData.rejected}
+            </div>
           </div>
         </Card>
       </div>

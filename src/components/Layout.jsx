@@ -2,13 +2,14 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import {
   Home, Star, DollarSign, TrendingUp, Flame,
-  Target, Sun, Moon, Monitor
+  Target, Sun, Moon, Monitor, Search
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { useVisitorCount } from '../hooks/useVisitorCount'
 import FeedbackWidget from './FeedbackWidget'
 import CookieConsent from './CookieConsent'
+import GlobalSearch from './GlobalSearch'
 import logoUrl from '/logo.png'
 
 const NAV = [
@@ -30,10 +31,25 @@ export default function Layout({ children }) {
   const navigate = useNavigate()
   const { theme, setTheme, resolved } = useTheme()
   const [themeMenuOpen, setThemeMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const visitorCount = useVisitorCount()
 
   // Initialize analytics tracking
   useAnalytics()
+
+  // Global Cmd+K / Ctrl+K listener
+  import('react').then(({ useEffect }) => {
+    useEffect(() => {
+      const handleKeyDown = (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault()
+          setSearchOpen(true)
+        }
+      }
+      window.addEventListener('keydown', handleKeyDown)
+      return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [])
+  })
 
   const currentIcon = THEME_OPTIONS.find(o => o.id === theme)?.icon ?? Monitor
 
@@ -78,6 +94,18 @@ export default function Layout({ children }) {
           </nav>
 
           <div className="flex-1" />
+
+          {/* Search Button */}
+          <button 
+            onClick={() => setSearchOpen(true)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors border border-transparent dark:border-gray-700/50"
+          >
+            <Search size={16} />
+            <span className="hidden sm:inline text-sm">ค้นหาหุ้น...</span>
+            <kbd className="hidden md:inline-flex items-center gap-1 font-sans text-[10px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-1.5 py-0.5 ml-2">
+              <span className="text-xs leading-none">⌘</span>K
+            </kbd>
+          </button>
         </div>
 
         {/* ── Mobile bottom nav ── */}
@@ -166,6 +194,7 @@ export default function Layout({ children }) {
         <div className="fixed inset-0 z-40" onClick={() => setThemeMenuOpen(false)} />
       )}
 
+      <GlobalSearch isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <CookieConsent />
     </div>
   )
