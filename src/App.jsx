@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Star, Search, TrendingUp, TrendingDown, Wifi, WifiOff, X, BarChart2, ChevronUp, ChevronDown, RefreshCw, DollarSign, LayoutGrid } from 'lucide-react'
 import { SP500 } from './sp500'
 import { classify, LYNCH_CATEGORIES, ALL_LYNCH_IDS } from './utils/peterLynch'
+import CookieConsent from './components/CookieConsent'
 
 // ─── Dividend frequency detection (shared helper) ────────────────
 function detectFreq(dividends) {
@@ -915,6 +916,7 @@ export default function App() {
           </>
         )}
       </main>
+      <CookieConsent />
     </div>
   )
 }

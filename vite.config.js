@@ -108,4 +108,7 @@ export default defineConfig({
     tailwindcss(),
     yahooProxyPlugin,
   ],
+  optimizeDeps: {
+    include: ['tslib']
+  }
 })

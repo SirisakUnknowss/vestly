@@ -5,8 +5,10 @@ import {
   Target, Sun, Moon, Monitor
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { useVisitorCount } from '../hooks/useVisitorCount'
 import FeedbackWidget from './FeedbackWidget'
+import CookieConsent from './CookieConsent'
 import logoUrl from '/logo.png'
 
 const NAV = [
@@ -29,6 +31,9 @@ export default function Layout({ children }) {
   const { theme, setTheme, resolved } = useTheme()
   const [themeMenuOpen, setThemeMenuOpen] = useState(false)
   const visitorCount = useVisitorCount()
+
+  // Initialize analytics tracking
+  useAnalytics()
 
   const currentIcon = THEME_OPTIONS.find(o => o.id === theme)?.icon ?? Monitor
 
@@ -160,6 +165,8 @@ export default function Layout({ children }) {
       {themeMenuOpen && (
         <div className="fixed inset-0 z-40" onClick={() => setThemeMenuOpen(false)} />
       )}
+
+      <CookieConsent />
     </div>
   )
 }
