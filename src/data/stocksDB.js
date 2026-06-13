@@ -432,6 +432,90 @@ export const STOCKS_DB = [
   { s:'STZ',   n:'Constellation Brands Inc.',      e:'NYSE',   sec:'Staples',          ind:'Beer & Spirits',              cap:'Large', t:'Stock' },
   { s:'TAP',   n:'Molson Coors Beverage Co.',      e:'NYSE',   sec:'Staples',          ind:'Beer',                        cap:'Mid',   t:'Stock' },
   { s:'SAM',   n:'Boston Beer Company',            e:'NYSE',   sec:'Staples',          ind:'Beer',                        cap:'Small', t:'Stock' },
+
+  // ── Additional Nasdaq Stocks ──────────────────────────────────────
+  // Technology
+  { s:'ADSK',  n:'Autodesk Inc.',                  e:'NASDAQ', sec:'Technology',       ind:'Design Software',             cap:'Large', t:'Stock' },
+  { s:'TEAM',  n:'Atlassian Corporation PLC',      e:'NASDAQ', sec:'Technology',       ind:'Collaboration Software',      cap:'Large', t:'Stock' },
+  { s:'ASML',  n:'ASML Holding NV ADR',            e:'NASDAQ', sec:'Technology',       ind:'Semiconductor Equipment',     cap:'Large', t:'Stock' },
+  { s:'TTD',   n:'The Trade Desk Inc.',            e:'NASDAQ', sec:'Technology',       ind:'Digital Advertising',         cap:'Large', t:'Stock' },
+  { s:'ZM',    n:'Zoom Video Communications',      e:'NASDAQ', sec:'Technology',       ind:'Video Conferencing',          cap:'Mid',   t:'Stock' },
+  { s:'DOCU',  n:'DocuSign Inc.',                  e:'NASDAQ', sec:'Technology',       ind:'e-Signature Software',        cap:'Mid',   t:'Stock' },
+  { s:'ROKU',  n:'Roku Inc.',                      e:'NASDAQ', sec:'Technology',       ind:'Streaming Devices',           cap:'Mid',   t:'Stock' },
+  { s:'ILMN',  n:'Illumina Inc.',                  e:'NASDAQ', sec:'Technology',       ind:'Genomic Sequencing',          cap:'Mid',   t:'Stock' },
+  { s:'CDW',   n:'CDW Corporation',                e:'NASDAQ', sec:'Technology',       ind:'IT Solutions',                cap:'Large', t:'Stock' },
+  { s:'GFS',   n:'GlobalFoundries Inc.',           e:'NASDAQ', sec:'Technology',       ind:'Semiconductor Foundry',       cap:'Large', t:'Stock' },
+  { s:'LOGI',  n:'Logitech International SA',      e:'NASDAQ', sec:'Technology',       ind:'Peripherals',                 cap:'Mid',   t:'Stock' },
+  { s:'MTCH',  n:'Match Group Inc.',               e:'NASDAQ', sec:'Technology',       ind:'Online Dating',               cap:'Mid',   t:'Stock' },
+  { s:'ZI',    n:'ZoomInfo Technologies Inc.',     e:'NASDAQ', sec:'Technology',       ind:'Business Intelligence',       cap:'Mid',   t:'Stock' },
+  { s:'FIVN',  n:'Five9 Inc.',                     e:'NASDAQ', sec:'Technology',       ind:'Cloud Contact Center',        cap:'Mid',   t:'Stock' },
+  { s:'APPN',  n:'Appian Corporation',             e:'NASDAQ', sec:'Technology',       ind:'Low-Code Software',           cap:'Small', t:'Stock' },
+  { s:'SMAR',  n:'Smartsheet Inc.',                e:'NASDAQ', sec:'Technology',       ind:'Work Management Software',    cap:'Mid',   t:'Stock' },
+  { s:'ALTR',  n:'Altair Engineering Inc.',        e:'NASDAQ', sec:'Technology',       ind:'Simulation Software',         cap:'Mid',   t:'Stock' },
+  { s:'EXLS',  n:'ExlService Holdings Inc.',       e:'NASDAQ', sec:'Technology',       ind:'Data Analytics Services',     cap:'Mid',   t:'Stock' },
+  { s:'PCOR',  n:'Procore Technologies Inc.',      e:'NASDAQ', sec:'Technology',       ind:'Construction Software',       cap:'Mid',   t:'Stock' },
+  { s:'AZPN',  n:'Aspen Technology Inc.',          e:'NASDAQ', sec:'Technology',       ind:'Industrial Software',         cap:'Large', t:'Stock' },
+
+  // Consumer
+  { s:'MELI',  n:'MercadoLibre Inc.',              e:'NASDAQ', sec:'Consumer',         ind:'E-Commerce Latin America',    cap:'Large', t:'Stock' },
+  { s:'DLTR',  n:'Dollar Tree Inc.',               e:'NASDAQ', sec:'Consumer',         ind:'Dollar Stores',               cap:'Large', t:'Stock' },
+  { s:'TSCO',  n:'Tractor Supply Company',         e:'NASDAQ', sec:'Consumer',         ind:'Farm & Ranch Retail',         cap:'Large', t:'Stock' },
+  { s:'SIRI',  n:'Sirius XM Holdings Inc.',        e:'NASDAQ', sec:'Consumer',         ind:'Satellite Radio',             cap:'Mid',   t:'Stock' },
+  { s:'FOXA',  n:'Fox Corporation Class A',        e:'NASDAQ', sec:'Consumer',         ind:'Broadcasting',                cap:'Large', t:'Stock' },
+  { s:'FOX',   n:'Fox Corporation Class B',        e:'NASDAQ', sec:'Consumer',         ind:'Broadcasting',                cap:'Large', t:'Stock' },
+  { s:'LBTYA', n:'Liberty Global PLC Class A',     e:'NASDAQ', sec:'Consumer',         ind:'Telecom',                     cap:'Mid',   t:'Stock' },
+  { s:'NWSA',  n:'News Corp Class A',              e:'NASDAQ', sec:'Consumer',         ind:'Media',                       cap:'Mid',   t:'Stock' },
+  { s:'PENN',  n:'PENN Entertainment Inc.',        e:'NASDAQ', sec:'Consumer',         ind:'Gaming & Casinos',            cap:'Mid',   t:'Stock' },
+
+  // Healthcare
+  { s:'ALGN',  n:'Align Technology Inc.',          e:'NASDAQ', sec:'Healthcare',       ind:'Dental Devices',              cap:'Mid',   t:'Stock' },
+  { s:'IDXX',  n:'IDEXX Laboratories Inc.',        e:'NASDAQ', sec:'Healthcare',       ind:'Veterinary Diagnostics',      cap:'Large', t:'Stock' },
+  { s:'EXAS',  n:'Exact Sciences Corporation',     e:'NASDAQ', sec:'Healthcare',       ind:'Molecular Diagnostics',       cap:'Mid',   t:'Stock' },
+  { s:'INCY',  n:'Incyte Corporation',             e:'NASDAQ', sec:'Healthcare',       ind:'Biotechnology',               cap:'Mid',   t:'Stock' },
+  { s:'BMRN',  n:'BioMarin Pharmaceutical Inc.',   e:'NASDAQ', sec:'Healthcare',       ind:'Rare Disease Biotech',        cap:'Mid',   t:'Stock' },
+  { s:'ALNY',  n:'Alnylam Pharmaceuticals Inc.',   e:'NASDAQ', sec:'Healthcare',       ind:'RNA Therapeutics',            cap:'Large', t:'Stock' },
+  { s:'IONS',  n:'Ionis Pharmaceuticals Inc.',     e:'NASDAQ', sec:'Healthcare',       ind:'Biotechnology',               cap:'Mid',   t:'Stock' },
+  { s:'NBIX',  n:'Neurocrine Biosciences Inc.',    e:'NASDAQ', sec:'Healthcare',       ind:'CNS Biotechnology',           cap:'Mid',   t:'Stock' },
+  { s:'UTHR',  n:'United Therapeutics Corp.',      e:'NASDAQ', sec:'Healthcare',       ind:'Pulmonary Hypertension',      cap:'Mid',   t:'Stock' },
+  { s:'RARE',  n:'Ultragenyx Pharmaceutical Inc.', e:'NASDAQ', sec:'Healthcare',       ind:'Rare Disease Biotech',        cap:'Mid',   t:'Stock' },
+  { s:'NVAX',  n:'Novavax Inc.',                   e:'NASDAQ', sec:'Healthcare',       ind:'Vaccines',                    cap:'Small', t:'Stock' },
+
+  // Industrial
+  { s:'CTAS',  n:'Cintas Corporation',             e:'NASDAQ', sec:'Industrial',       ind:'Uniform Services',            cap:'Large', t:'Stock' },
+  { s:'ODFL',  n:'Old Dominion Freight Line Inc.', e:'NASDAQ', sec:'Industrial',       ind:'Freight Transportation',      cap:'Large', t:'Stock' },
+  { s:'LSTR',  n:'Landstar System Inc.',           e:'NASDAQ', sec:'Industrial',       ind:'Transportation',              cap:'Mid',   t:'Stock' },
+  { s:'EXPD',  n:'Expeditors Intl. of Washington', e:'NASDAQ', sec:'Industrial',       ind:'Freight Forwarding',          cap:'Large', t:'Stock' },
+
+  // Finance
+  { s:'LPLA',  n:'LPL Financial Holdings Inc.',    e:'NASDAQ', sec:'Finance',          ind:'Financial Advisory',          cap:'Large', t:'Stock' },
+  { s:'SEIC',  n:'SEI Investments Company',        e:'NASDAQ', sec:'Finance',          ind:'Investment Management',       cap:'Mid',   t:'Stock' },
+  { s:'IBKR',  n:'Interactive Brokers Group Inc.', e:'NASDAQ', sec:'Finance',          ind:'Online Brokerage',            cap:'Large', t:'Stock' },
+  { s:'NAVI',  n:'Navient Corporation',            e:'NASDAQ', sec:'Finance',          ind:'Student Loans',               cap:'Small', t:'Stock' },
+  { s:'MGNI',  n:'Magnite Inc.',                   e:'NASDAQ', sec:'Finance',          ind:'Digital Advertising Tech',    cap:'Small', t:'Stock' },
+
+  // Staples
+  { s:'COKE',  n:'Coca-Cola Consolidated Inc.',    e:'NASDAQ', sec:'Staples',          ind:'Beverages',                   cap:'Mid',   t:'Stock' },
+
+  // Space & Aerospace
+  { s:'SPCX',  n:'The Space ETF',                  e:'NASDAQ', sec:'Industrial',       ind:'Space Industry ETF',          cap:'Mid',   t:'ETF'  },
+  { s:'LUNR',  n:'Intuitive Machines Inc.',        e:'NASDAQ', sec:'Industrial',       ind:'Space Exploration',           cap:'Small', t:'Stock' },
+  { s:'RKLB',  n:'Rocket Lab USA Inc.',            e:'NASDAQ', sec:'Industrial',       ind:'Space Launch Vehicles',       cap:'Small', t:'Stock' },
+  { s:'KTOS',  n:'Kratos Defense & Security',      e:'NASDAQ', sec:'Industrial',       ind:'Aerospace & Defense',         cap:'Mid',   t:'Stock' },
+  { s:'SPCE',  n:'Virgin Galactic Holdings Inc.',  e:'NYSE',   sec:'Industrial',       ind:'Space Tourism',               cap:'Small', t:'Stock' },
+  { s:'ASTR',  n:'Astra Space Inc.',               e:'NASDAQ', sec:'Industrial',       ind:'Space Launch',                cap:'Small', t:'Stock' },
+  { s:'RDW',   n:'Redwire Corporation',            e:'NYSE',   sec:'Industrial',       ind:'Space Infrastructure',        cap:'Small', t:'Stock' },
+  { s:'MNTS',  n:'Momentus Inc.',                  e:'NASDAQ', sec:'Industrial',       ind:'Space Transportation',        cap:'Small', t:'Stock' },
+  { s:'SATL',  n:'Satellogic Inc.',                e:'NASDAQ', sec:'Technology',       ind:'Earth Observation Satellites', cap:'Small', t:'Stock' },
+  { s:'ASTS',  n:'AST SpaceMobile Inc.',           e:'NASDAQ', sec:'Technology',       ind:'Space-Based Broadband',       cap:'Mid',   t:'Stock' },
+  { s:'MAXR',  n:'Maxar Technologies Inc.',        e:'NYSE',   sec:'Technology',       ind:'Satellite Imagery',           cap:'Mid',   t:'Stock' },
+
+  // China ADRs (Nasdaq-listed)
+  { s:'BIDU',  n:'Baidu Inc. ADR',                 e:'NASDAQ', sec:'Technology',       ind:'Internet Search China',       cap:'Large', t:'Stock' },
+  { s:'JD',    n:'JD.com Inc. ADR',                e:'NASDAQ', sec:'Consumer',         ind:'E-Commerce China',            cap:'Large', t:'Stock' },
+  { s:'PDD',   n:'PDD Holdings Inc. ADR',          e:'NASDAQ', sec:'Consumer',         ind:'E-Commerce China',            cap:'Large', t:'Stock' },
+  { s:'BILI',  n:'Bilibili Inc. ADR',              e:'NASDAQ', sec:'Consumer',         ind:'Online Video China',          cap:'Mid',   t:'Stock' },
+  { s:'TIGR',  n:'UP Fintech Holding ADR',         e:'NASDAQ', sec:'Finance',          ind:'Online Brokerage China',      cap:'Small', t:'Stock' },
+  { s:'FUTU',  n:'Futu Holdings Ltd. ADR',         e:'NASDAQ', sec:'Finance',          ind:'Online Brokerage China',      cap:'Mid',   t:'Stock' },
 ]
 
 export const SECTORS = [...new Set(STOCKS_DB.map(s => s.sec))].sort()
