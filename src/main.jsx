@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import Watchlist from './pages/Watchlist'
 import StockDetail from './pages/StockDetail'
 import DividendPage from './pages/DividendPage'
+import CalendarHub from './pages/CalendarHub'
 import GrowthStocks from './pages/GrowthStocks'
 import HotMovers from './pages/HotMovers'
 import StockHunter from './pages/StockHunter'
@@ -42,6 +43,7 @@ function AppRoutes() {
           <Route path="/"          element={<Home />} />
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/dividends" element={<DividendPage />} />
+          <Route path="/calendar"  element={<CalendarHub />} />
           <Route path="/growth"    element={<GrowthStocks />} />
           <Route path="/movers"    element={<HotMovers />} />
           <Route path="/hunter"   element={<StockHunter />} />

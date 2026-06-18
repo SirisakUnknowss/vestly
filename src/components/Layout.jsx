@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import {
   Home, Star, DollarSign, TrendingUp, Flame,
-  Target, Sun, Moon, Monitor, Search
+  Target, Sun, Moon, Monitor, Search, Calendar
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme'
 import { useAnalytics } from '../hooks/useAnalytics'
@@ -17,6 +17,7 @@ const NAV = [
   { to: '/',          icon: Home,        label: 'Markets'    },
   { to: '/watchlist', icon: Star,        label: 'Watchlist'  },
   { to: '/dividends', icon: DollarSign,  label: 'Dividends'  },
+  { to: '/calendar',  icon: Calendar,    label: 'Calendar'   },
   { to: '/growth',    icon: TrendingUp,  label: 'Growth'     },
   { to: '/movers',    icon: Flame,       label: 'Hot'        },
   { to: '/hunter',    icon: Target,      label: 'Hunter'     },
