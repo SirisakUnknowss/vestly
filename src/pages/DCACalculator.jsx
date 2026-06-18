@@ -11,7 +11,8 @@ import {
   Sparkles,
   Info,
   HelpCircle,
-  X
+  X,
+  Search
 } from 'lucide-react'
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis,
