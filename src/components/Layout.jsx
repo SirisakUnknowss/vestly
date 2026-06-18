@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import {
   Home, Star, DollarSign, TrendingUp, Flame,
@@ -14,25 +14,54 @@ import GlobalSearch from './GlobalSearch'
 import { useAuth } from '../contexts/AuthContext'
 import logoUrl from '/logo.png'
 
-const NAV = [
-  { to: '/',          icon: Home,        label: 'Markets'    },
-  { to: '/watchlist', icon: Star,        label: 'Watchlist'  },
-  { to: '/dividends', icon: DollarSign,  label: 'Dividends'  },
-  { to: '/calendar',  icon: Calendar,    label: 'Calendar'   },
-  { to: '/dca',       icon: Calculator,  label: 'DCA'        },
-  { to: '/heatmap',   icon: LayoutGrid,  label: 'Heatmap'    },
-  { to: '/ai-assistant', icon: Bot,      label: 'AI Chat'    },
-  { to: '/growth',    icon: TrendingUp,  label: 'Growth'     },
-  { to: '/movers',    icon: Flame,       label: 'Hot'        },
-  { to: '/hunter',    icon: Target,      label: 'Hunter'     },
+const CATEGORIES = [
+  {
+    id: 'market',
+    label: 'Market Hub',
+    to: '/',
+    sub: [
+      { to: '/', label: 'Overview', icon: Home, exact: true },
+      { to: '/watchlist', label: 'Watchlist', icon: Star }
+    ]
+  },
+  {
+    id: 'screener',
+    label: 'Screener',
+    to: '/stocks',
+    sub: [
+      { to: '/stocks', label: 'All Stocks', icon: Search },
+      { to: '/hunter', label: 'Stock Hunter', icon: Target },
+      { to: '/dividends', label: 'Dividends', icon: DollarSign },
+      { to: '/growth', label: 'Growth Stocks', icon: TrendingUp },
+      { to: '/movers', label: 'Hot Movers', icon: Flame }
+    ]
+  },
+  {
+    id: 'tools',
+    label: 'Tools',
+    to: '/calendar',
+    sub: [
+      { to: '/calendar', label: 'Calendar Hub', icon: Calendar },
+      { to: '/dca', label: 'DCA Calculator', icon: Calculator },
+      { to: '/heatmap', label: 'Sector Heatmap', icon: LayoutGrid }
+    ]
+  },
+  {
+    id: 'ai',
+    label: 'AI Chat',
+    to: '/ai-assistant',
+    sub: [
+      { to: '/ai-assistant', label: 'AI Assistant', icon: Bot }
+    ]
+  }
 ]
 
 const MOBILE_NAV = [
-  { to: '/',          icon: Home,        label: 'Markets'    },
-  { to: '/watchlist', icon: Star,        label: 'Watchlist'  },
-  { to: '/calendar',  icon: Calendar,    label: 'Calendar'   },
-  { to: '/dca',       icon: Calculator,  label: 'DCA'        },
-  { to: '/ai-assistant', icon: Bot,      label: 'AI Chat'    },
+  { to: '/',             icon: Home,        label: 'Market Hub' },
+  { to: '/watchlist',    icon: Star,        label: 'Watchlist'  },
+  { to: '/stocks',       icon: Search,      label: 'Screener'   },
+  { to: '/calendar',     icon: Calendar,    label: 'Tools'      },
+  { to: '/ai-assistant', icon: Bot,        label: 'AI Chat'    },
 ]
 
 const THEME_OPTIONS = [
@@ -43,6 +72,7 @@ const THEME_OPTIONS = [
 
 export default function Layout({ children }) {
   const navigate = useNavigate()
+  const location = useLocation()
   const { theme, setTheme, resolved } = useTheme()
   const [themeMenuOpen, setThemeMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -89,24 +119,27 @@ export default function Layout({ children }) {
           </button>
 
           {/* Nav — desktop */}
-          <nav className="hidden md:flex items-center gap-0.5 ml-2">
-            {NAV.map(({ to, icon: Icon, label }) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={to === '/'}
-                className={({ isActive }) =>
-                  `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+          <nav className="hidden md:flex items-center gap-0.5 ml-4">
+            {CATEGORIES.map((cat) => {
+              // Find if this category is active based on current location matching any sub path
+              const isActive = cat.sub.some(s => {
+                if (s.exact) return location.pathname === s.to
+                return location.pathname === s.to || (s.to !== '/' && location.pathname.startsWith(s.to))
+              })
+              return (
+                <NavLink
+                  key={cat.id}
+                  to={cat.to}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-all ${
                     isActive
-                      ? 'text-white bg-emerald-500/10 border border-emerald-500/30'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`
-                }
-              >
-                <Icon size={14} />
-                {label}
-              </NavLink>
-            ))}
+                      ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-sm shadow-emerald-500/5'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                  }`}
+                >
+                  {cat.label}
+                </NavLink>
+              )
+            })}
           </nav>
 
           <div className="flex-1" />
@@ -179,26 +212,113 @@ export default function Layout({ children }) {
 
         {/* ── Mobile bottom nav ── */}
         <div className="md:hidden flex border-t" style={{ borderColor: 'var(--border)' }}>
-          {MOBILE_NAV.map(({ to, icon: Icon, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={to === '/'}
-              className={({ isActive }) =>
-                `flex-1 flex flex-col items-center py-2 gap-0.5 text-[10px] font-medium transition-colors ${
-                  isActive ? 'text-emerald-400' : 'text-gray-600'
-                }`
-              }
-            >
-              <Icon size={17} />
-              {label}
-            </NavLink>
-          ))}
+          {MOBILE_NAV.map(({ to, icon: Icon, label }) => {
+            const isExact = to === '/'
+            return (
+              <NavLink
+                key={to}
+                to={to}
+                end={isExact}
+                className={({ isActive }) =>
+                  `flex-1 flex flex-col items-center py-2 gap-0.5 text-[10px] font-semibold transition-colors ${
+                    isActive ? 'text-emerald-400' : 'text-gray-600'
+                  }`
+                }
+              >
+                <Icon size={17} />
+                {label}
+              </NavLink>
+            )
+          })}
         </div>
       </header>
 
-      {/* ── Page ── */}
-      <main className="flex-1">{children}</main>
+      {/* Compute active category and showSidebar state */}
+      {(() => {
+        const activeCategory = CATEGORIES.find(cat => 
+          cat.sub.some(s => {
+            if (s.exact) return location.pathname === s.to
+            return location.pathname === s.to || (s.to !== '/' && location.pathname.startsWith(s.to))
+          })
+        ) || CATEGORIES[0]
+
+        const showSidebar = activeCategory && activeCategory.sub.length > 1
+
+        return (
+          <>
+            {/* ── Sub-menu tab bar for mobile ── */}
+            {showSidebar && (
+              <div 
+                className="md:hidden flex items-center gap-1.5 overflow-x-auto px-4 py-2 border-b no-scrollbar scroll-smooth shrink-0"
+                style={{ 
+                  backgroundColor: resolved === 'dark' ? 'rgba(9,20,19,0.4)' : 'rgba(240,242,246,0.6)',
+                  borderColor: 'var(--border)'
+                }}
+              >
+                {activeCategory.sub.map(({ to, label, icon: Icon, exact }) => (
+                  <NavLink
+                    key={to}
+                    to={to}
+                    end={exact}
+                    className={({ isActive }) =>
+                      `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-all ${
+                        isActive
+                          ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/30'
+                          : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                      }`
+                    }
+                  >
+                    <Icon size={12} />
+                    {label}
+                  </NavLink>
+                ))}
+              </div>
+            )}
+
+            {/* ── Main Layout Wrapper (Sidebar + Page content) ── */}
+            <div className="flex-1 w-full max-w-screen-xl mx-auto px-4 py-6 flex flex-col md:flex-row gap-6">
+              
+              {/* Sidebar - Desktop */}
+              {showSidebar && (
+                <aside className="w-60 shrink-0 hidden md:block sticky top-20 self-start p-4 rounded-2xl border"
+                  style={{ 
+                    backgroundColor: 'var(--bg-card)', 
+                    borderColor: 'var(--border)',
+                    boxShadow: '0 4px 20px var(--shadow)',
+                  }}>
+                  <h3 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3.5 px-2.5">
+                    {activeCategory.label}
+                  </h3>
+                  <nav className="space-y-1">
+                    {activeCategory.sub.map(({ to, label, icon: Icon, exact }) => (
+                      <NavLink
+                        key={to}
+                        to={to}
+                        end={exact}
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all ${
+                            isActive
+                              ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 font-bold'
+                              : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                          }`
+                        }
+                      >
+                        <Icon size={15} />
+                        {label}
+                      </NavLink>
+                    ))}
+                  </nav>
+                </aside>
+              )}
+
+              {/* Main Content */}
+              <main className="flex-1 min-w-0">
+                {children}
+              </main>
+            </div>
+          </>
+        )
+      })()}
 
       {/* ── Footer ── */}
       <footer className="border-t py-4 text-center" style={{ borderColor: 'var(--border)' }}>

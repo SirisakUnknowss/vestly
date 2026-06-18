@@ -293,7 +293,7 @@ export default function SectorHeatmap() {
                         <div 
                           key={st.symbol}
                           onClick={() => navigate(`/stock/${st.symbol}`)}
-                          className="bg-gray-900/40 border border-gray-850 hover:border-green-500/30 rounded-lg p-2 flex justify-between items-center cursor-pointer transition-all hover:scale-[1.005]"
+                          className="bg-white dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 hover:border-green-500/30 rounded-lg p-2 flex justify-between items-center cursor-pointer transition-all hover:scale-[1.005]"
                         >
                           <div className="min-w-0">
                             <strong className="text-xs text-white block">{st.symbol}</strong>
@@ -323,7 +323,7 @@ export default function SectorHeatmap() {
                         <div 
                           key={st.symbol}
                           onClick={() => navigate(`/stock/${st.symbol}`)}
-                          className="bg-gray-900/40 border border-gray-850 hover:border-red-500/30 rounded-lg p-2 flex justify-between items-center cursor-pointer transition-all hover:scale-[1.005]"
+                          className="bg-white dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 hover:border-red-500/30 rounded-lg p-2 flex justify-between items-center cursor-pointer transition-all hover:scale-[1.005]"
                         >
                           <div className="min-w-0">
                             <strong className="text-xs text-white block">{st.symbol}</strong>

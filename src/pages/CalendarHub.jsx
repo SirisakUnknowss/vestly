@@ -113,7 +113,7 @@ export default function CalendarHub() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // 1. Mock Database
+  // Mock Database
   const mockEarnings = useMemo(() => [
     { date: getRelativeDate(-4), symbol: 'AAPL', epsEstimate: 1.40, epsActual: 1.45, revenueEstimate: 90000000000, revenueActual: 91500000000, hour: 'amc', quarter: 2, year: 2026 },
     { date: getRelativeDate(-2), symbol: 'MSFT', epsEstimate: 2.93, epsActual: 2.90, revenueEstimate: 64000000000, revenueActual: 63800000000, hour: 'amc', quarter: 2, year: 2026 },
@@ -289,25 +289,25 @@ export default function CalendarHub() {
         {/* Breadcrumb / Back Button */}
         <button 
           onClick={() => navigate('/')} 
-          className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors mb-4"
+          className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors mb-4"
         >
           <ArrowLeft size={14} /> Back to Markets
         </button>
 
         {/* ── Header Area ── */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-gray-800 pb-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-gray-200 dark:border-gray-800 pb-5">
           <div className="flex items-start gap-3">
             <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400">
               <CalendarIcon size={24} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold tracking-tight text-white">Calendar Hub</h1>
+                <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Calendar Hub</h1>
                 <span className="text-[10px] bg-blue-500/15 text-blue-400 border border-blue-500/25 px-2 py-0.5 rounded-full font-bold flex items-center gap-0.5">
                   <Sparkles size={8} /> Beta
                 </span>
               </div>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 ปฏิทินความเคลื่อนไหวสำคัญของหุ้นสหรัฐฯ: วันรายงานผลประกอบการรายไตรมาส (Earnings) และวันเครื่องหมายสิทธิ์เงินปันผล (Dividend)
               </p>
             </div>
@@ -321,23 +321,23 @@ export default function CalendarHub() {
           <div className="lg:col-span-3 space-y-4">
             
             {/* Tab Swapper */}
-            <div className="bg-gray-800/40 border border-gray-700/50 p-1.5 rounded-xl flex gap-1">
+            <div className="bg-gray-100 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/55 p-1.5 rounded-xl flex gap-1">
               <button
                 onClick={() => { setActiveTab('earnings'); setDateRange('month') }}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                   activeTab === 'earnings' 
                     ? 'bg-emerald-600 text-white shadow-md' 
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
                 }`}
               >
                 <TrendingUp size={15} /> Earnings
               </button>
               <button
                 onClick={() => { setActiveTab('dividends'); setDateRange('month') }}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                   activeTab === 'dividends' 
                     ? 'bg-emerald-600 text-white shadow-md' 
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
                 }`}
               >
                 <DollarSign size={15} /> Dividends
@@ -345,8 +345,8 @@ export default function CalendarHub() {
             </div>
 
             {/* Filter Card */}
-            <div className="bg-gray-800/25 border border-gray-700/40 rounded-xl p-4 space-y-4">
-              <h3 className="text-xs font-bold text-gray-500 tracking-wider uppercase">ตัวกรองปฏิทิน</h3>
+            <div className="bg-gray-50 dark:bg-gray-800/25 border border-gray-200 dark:border-gray-700/40 rounded-xl p-4 space-y-4">
+              <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 tracking-wider uppercase">ตัวกรองปฏิทิน</h3>
               
               {/* Search */}
               <div className="relative">
@@ -356,12 +356,12 @@ export default function CalendarHub() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="ค้นหา Symbol / ชื่อบริษัท..."
-                  className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-9 pr-8 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg pl-9 pr-8 py-2 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:border-emerald-500"
                 />
                 {searchQuery && (
                   <button 
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:hover:text-white"
                   >
                     <X size={12} />
                   </button>
@@ -369,22 +369,22 @@ export default function CalendarHub() {
               </div>
 
               {/* Watchlist Toggle */}
-              <label className="flex items-center justify-between p-2.5 bg-gray-900/50 rounded-lg cursor-pointer border border-transparent hover:border-gray-700 transition-colors">
+              <label className="flex items-center justify-between p-2.5 bg-white dark:bg-gray-900/50 rounded-lg cursor-pointer border border-gray-200 dark:border-transparent hover:border-gray-300 dark:hover:border-gray-700 transition-colors">
                 <div className="flex items-center gap-2">
                   <Star size={13} className={watchlistOnly ? 'text-yellow-400 fill-yellow-400' : 'text-gray-500'} />
-                  <span className="text-xs font-medium text-gray-300">เฉพาะใน Watchlist</span>
+                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">เฉพาะใน Watchlist</span>
                 </div>
                 <input
                   type="checkbox"
                   checked={watchlistOnly}
                   onChange={(e) => setWatchlistOnly(e.target.checked)}
-                  className="rounded border-gray-700 text-emerald-600 focus:ring-emerald-500 bg-gray-800 w-4 h-4 cursor-pointer"
+                  className="rounded border-gray-300 dark:border-gray-700 text-emerald-600 focus:ring-emerald-500 bg-white dark:bg-gray-800 w-4 h-4 cursor-pointer"
                 />
               </label>
 
               {/* Date Ranges */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-gray-500 uppercase">ช่วงเวลากิจกรรม</label>
+                <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">ช่วงเวลากิจกรรม</label>
                 <div className="grid grid-cols-2 gap-1.5">
                   {[
                     { id: 'week', label: 'สัปดาห์นี้' },
@@ -395,10 +395,10 @@ export default function CalendarHub() {
                     <button
                       key={range.id}
                       onClick={() => setDateRange(range.id)}
-                      className={`py-1.5 px-2.5 text-[11px] font-semibold border rounded-lg transition-colors ${
+                      className={`py-1.5 px-2.5 text-[11px] font-semibold border rounded-lg transition-colors cursor-pointer ${
                         dateRange === range.id
-                          ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 font-bold'
-                          : 'bg-gray-900 border-gray-700/60 text-gray-400 hover:border-gray-600 hover:text-white'
+                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/30 font-bold'
+                          : 'bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-700/60 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-900 dark:hover:text-white'
                       }`}
                     >
                       {range.label}
@@ -410,28 +410,28 @@ export default function CalendarHub() {
 
             {/* Quick Calculator Card for Dividends Tab */}
             {activeTab === 'dividends' && (
-              <div className="bg-gray-800/25 border border-gray-700/40 rounded-xl p-4 space-y-4">
-                <div className="flex items-center gap-1.5 text-emerald-400">
+              <div className="bg-gray-50 dark:bg-gray-800/25 border border-gray-200 dark:border-gray-700/40 rounded-xl p-4 space-y-4">
+                <div className="flex items-center gap-1.5 text-emerald-500 dark:text-emerald-400">
                   <Calculator size={15} />
-                  <h3 className="text-xs font-bold tracking-wider uppercase text-white">เครื่องคำนวณเงินปันผล</h3>
+                  <h3 className="text-xs font-bold tracking-wider uppercase text-gray-900 dark:text-white">เครื่องคำนวณเงินปันผล</h3>
                 </div>
 
                 <div className="space-y-3">
                   <div>
-                    <label className="text-[10px] text-gray-500 block mb-1">เลือกหุ้นปันผล</label>
+                    <label className="text-[10px] text-gray-400 dark:text-gray-500 block mb-1">เลือกหุ้นปันผล</label>
                     <select
                       value={calcSymbol}
                       onChange={(e) => setCalcSymbol(e.target.value)}
-                      className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                      className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-emerald-500 cursor-pointer animate-none"
                     >
                       {dividendsData.map(d => (
-                        <option key={d.symbol} value={d.symbol}>{d.symbol} — {d.name}</option>
+                        <option key={d.symbol} value={d.symbol} className="text-gray-900 dark:text-white bg-white dark:bg-gray-900">{d.symbol} — {d.name}</option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="text-[10px] text-gray-500 block mb-1">จำนวนหุ้นที่คุณถือ</label>
+                    <label className="text-[10px] text-gray-400 dark:text-gray-500 block mb-1">จำนวนหุ้นที่คุณถือ</label>
                     <input
                       id="calc-shares"
                       type="number"
@@ -439,37 +439,37 @@ export default function CalendarHub() {
                       value={sharesCount}
                       onChange={(e) => setSharesCount(e.target.value)}
                       placeholder="เช่น 100 หุ้น"
-                      className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder-gray-700"
+                      className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-emerald-500 placeholder-gray-400 dark:placeholder-gray-700"
                     />
                   </div>
 
                   {calcPayoutResult && (
-                    <div className="p-3 bg-emerald-950/20 border border-emerald-900/30 rounded-lg space-y-2 text-xs">
-                      <div className="flex justify-between text-gray-400">
+                    <div className="p-3 bg-emerald-500/5 dark:bg-emerald-905/20 border border-emerald-500/10 dark:border-emerald-900/30 rounded-lg space-y-2 text-xs">
+                      <div className="flex justify-between text-gray-500 dark:text-gray-400">
                         <span>ปันผลต่อหุ้น:</span>
-                        <span className="font-bold text-white">${calcPayoutResult.amountPerShare.toFixed(3)}</span>
+                        <span className="font-bold text-gray-900 dark:text-white">${calcPayoutResult.amountPerShare.toFixed(3)}</span>
                       </div>
-                      <div className="flex justify-between text-gray-400 border-b border-gray-800/80 pb-1.5">
+                      <div className="flex justify-between text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800 pb-1.5">
                         <span>Dividend Yield:</span>
-                        <span className="font-semibold text-emerald-400">{calcPayoutResult.yield.toFixed(2)}%</span>
+                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">{calcPayoutResult.yield.toFixed(2)}%</span>
                       </div>
-                      <div className="flex justify-between items-center text-sm font-bold text-emerald-300 pt-0.5">
+                      <div className="flex justify-between items-center text-sm font-bold text-emerald-600 dark:text-emerald-300 pt-0.5">
                         <span>ปันผลรวมรับ:</span>
-                        <span className="text-base text-white font-black">${calcPayoutResult.totalPayout.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span className="text-base text-gray-900 dark:text-white font-black">${calcPayoutResult.totalPayout.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                       </div>
                     </div>
                   )}
 
                   {calcPayoutResult && showCalcTip && (
-                    <div className="p-2.5 bg-gray-900/40 rounded-lg text-[10px] text-gray-500 leading-relaxed relative border border-gray-800">
+                    <div className="p-2.5 bg-white dark:bg-gray-900/40 rounded-lg text-[10px] text-gray-600 dark:text-gray-500 leading-relaxed relative border border-gray-200 dark:border-gray-800">
                       <button 
                         onClick={() => setShowCalcTip(false)}
-                        className="absolute top-1 right-1 text-gray-600 hover:text-gray-400"
+                        className="absolute top-1 right-1 text-gray-500 hover:text-gray-900 dark:hover:text-gray-400"
                       >
                         <X size={10} />
                       </button>
-                      <span className="font-semibold text-yellow-500 block mb-0.5">⚠️ คำเตือนสิทธิ์</span>
-                      ต้องซื้อหุ้นและถือไว้ก่อนวันที่ <span className="font-bold text-gray-300">{calcPayoutResult.exDate}</span> (Ex-Dividend Date) จึงจะมีสิทธิ์ได้รับเงินปันผลในวันที่ <span className="font-bold text-gray-300">{calcPayoutResult.payDate}</span>
+                      <span className="font-semibold text-amber-600 dark:text-yellow-500 block mb-0.5">⚠️ คำเตือนสิทธิ์</span>
+                      ต้องซื้อหุ้นและถือไว้ก่อนวันที่ <span className="font-bold text-gray-600 dark:text-gray-300">{calcPayoutResult.exDate}</span> (Ex-Dividend Date) จึงจะมีสิทธิ์ได้รับเงินปันผลในวันที่ <span className="font-bold text-gray-600 dark:text-gray-300">{calcPayoutResult.payDate}</span>
                     </div>
                   )}
                 </div>
@@ -477,20 +477,20 @@ export default function CalendarHub() {
             )}
             
             {/* Quick Guide Card */}
-            <div className="bg-gray-800/25 border border-gray-700/40 rounded-xl p-4 text-xs space-y-2">
-              <div className="flex items-center gap-1.5 text-gray-400 font-semibold mb-1">
+            <div className="bg-gray-50 dark:bg-gray-800/25 border border-gray-200 dark:border-gray-700/40 rounded-xl p-4 text-xs space-y-2">
+              <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 font-semibold mb-1">
                 <Info size={13} />
                 <span>คำศัพท์น่ารู้</span>
               </div>
-              <div className="space-y-2 leading-relaxed text-gray-500 text-[11px]">
+              <div className="space-y-2 leading-relaxed text-gray-600 dark:text-gray-500 text-[11px]">
                 <p>
-                  <strong className="text-gray-300">Ex-Dividend Date (Ex-Date):</strong> วันขึ้นเครื่องหมายไม่ได้รับปันผล หากต้องการปันผล ต้องซื้อและถือครองหุ้นตัวนั้นก่อนถึงวันนี้
+                  <strong className="text-gray-800 dark:text-gray-300">Ex-Dividend Date (Ex-Date):</strong> วันขึ้นเครื่องหมายไม่ได้รับปันผล หากต้องการปันผล ต้องซื้อและถือครองหุ้นตัวนั้นก่อนถึงวันนี้
                 </p>
                 <p>
-                  <strong className="text-gray-300">Pay Date:</strong> วันที่เงินสดปันผลจะถูกโอนเข้าบัญชีซื้อขายหลักทรัพย์ของคุณจริง
+                  <strong className="text-gray-800 dark:text-gray-300">Pay Date:</strong> วันที่เงินสดปันผลจะถูกโอนเข้าบัญชีซื้อขายหลักทรัพย์ของคุณจริง
                 </p>
                 <p>
-                  <strong className="text-gray-300">Hour badging:</strong> 🌅 BMO = Before Market Open (ก่อนเปิดตลาด) / 🌃 AMC = After Market Close (หลังปิดตลาด)
+                  <strong className="text-gray-800 dark:text-gray-300">Hour badging:</strong> 🌅 BMO = Before Market Open (ก่อนเปิดตลาด) / 🌃 AMC = After Market Close (หลังปิดตลาด)
                 </p>
               </div>
             </div>
@@ -501,9 +501,9 @@ export default function CalendarHub() {
           <div className="lg:col-span-9">
             
             {loading && (
-              <div className="flex flex-col items-center justify-center py-20 bg-gray-800/10 border border-gray-800/50 rounded-2xl">
+              <div className="flex flex-col items-center justify-center py-20 bg-gray-50 dark:bg-gray-800/10 border border-gray-200 dark:border-gray-800/50 rounded-2xl">
                 <div className="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full mb-3" />
-                <p className="text-sm text-gray-400">กำลังดึงข้อมูลกิจกรรมล่าสุดจาก Finnhub...</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">กำลังดึงข้อมูลกิจกรรมล่าสุดจาก Finnhub...</p>
               </div>
             )}
 
@@ -514,41 +514,40 @@ export default function CalendarHub() {
                 {activeTab === 'earnings' && (
                   <>
                     {groupedEarnings.length === 0 ? (
-                      <div className="text-center py-20 bg-gray-800/10 border border-gray-800/50 rounded-2xl text-gray-500 space-y-2">
+                      <div className="text-center py-20 bg-gray-50 dark:bg-gray-800/10 border border-gray-200 dark:border-gray-800/50 rounded-2xl text-gray-500 space-y-2">
                         <p className="text-base">📅 ไม่พบรายการปฏิทินงวดผลประกอบการ</p>
-                        <p className="text-xs text-gray-600">ลองขยายช่วงตัวเลือกเวลา หรือพิมพ์คำค้นหาใหม่อีกครั้ง</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-600">ลองขยายช่วงตัวเลือกเวลา หรือพิมพ์คำค้นหาใหม่อีกครั้ง</p>
                       </div>
                     ) : (
                       <div className="space-y-6">
                         {groupedEarnings.map((group) => (
                           <div key={group.date} className="space-y-2.5">
-                            <div className="flex items-center gap-2.5 sticky top-14 bg-gray-900 py-2.5 z-10">
-                              <span className="text-xs font-extrabold text-emerald-400 bg-emerald-950/20 border border-emerald-900/30 px-3 py-1 rounded-full uppercase tracking-wider">
+                            <div className="flex items-center gap-2.5 sticky top-14 bg-white dark:bg-gray-900 py-2.5 z-10">
+                              <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 dark:bg-emerald-905/20 border border-emerald-500/10 dark:border-emerald-900/30 px-3 py-1 rounded-full uppercase tracking-wider">
                                 {group.date}
                               </span>
                               <span className="text-xs font-bold text-gray-400">
                                 ({formatThaiDate(group.date)})
                               </span>
-                              <div className="flex-1 h-px bg-gray-800" />
+                              <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                               {group.items.map((item, idx) => {
                                 const isPast = item.epsActual !== null
                                 const isBeat = isPast && item.epsActual >= item.epsEstimate
-                                const hasSurprise = isPast && item.epsEstimate != null
                                 
                                 return (
                                   <div 
                                     key={`${item.symbol}-${idx}`}
                                     onClick={() => navigate(`/stock/${item.symbol}`)}
-                                    className="bg-gray-800/30 border border-gray-700/40 hover:border-emerald-500/50 rounded-xl p-4 cursor-pointer transition-all hover:scale-[1.005] group"
+                                    className="bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700/40 hover:border-emerald-500/50 rounded-xl p-4 cursor-pointer transition-all hover:scale-[1.005] group"
                                   >
                                     <div className="flex items-start justify-between">
                                       <div>
                                         <div className="flex items-center gap-2">
-                                          <span className="font-extrabold text-white group-hover:text-emerald-400 transition-colors text-base">{item.symbol}</span>
-                                          <span className="text-[10px] text-gray-400 font-medium px-2 py-0.5 bg-gray-900 rounded border border-gray-800">
+                                          <span className="font-extrabold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors text-base">{item.symbol}</span>
+                                          <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium px-2 py-0.5 bg-gray-100 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-800">
                                             Q{item.quarter || '—'} {item.year || '—'}
                                           </span>
                                         </div>
@@ -560,8 +559,8 @@ export default function CalendarHub() {
                                       <div className="flex flex-col items-end gap-1">
                                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 ${
                                           item.hour === 'bmo' 
-                                            ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20' 
-                                            : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
+                                            ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20' 
+                                            : 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20'
                                         }`}>
                                           {item.hour === 'bmo' ? '🌅 BMO' : '🌃 AMC'}
                                         </span>
@@ -569,13 +568,13 @@ export default function CalendarHub() {
                                         {isPast ? (
                                           <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full border ${
                                             isBeat 
-                                              ? 'bg-green-500/10 text-green-400 border-green-500/30' 
-                                              : 'bg-red-500/10 text-red-400 border-red-500/30'
+                                              ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/30' 
+                                              : 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30'
                                           }`}>
                                             {isBeat ? '🔥 BEAT' : '🔻 MISS'}
                                           </span>
                                         ) : (
-                                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-gray-900 text-gray-500 border border-gray-800">
+                                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-gray-100 dark:bg-gray-900 text-gray-500 border border-gray-200 dark:border-gray-800">
                                             UPCOMING
                                           </span>
                                         )}
@@ -583,29 +582,29 @@ export default function CalendarHub() {
                                     </div>
 
                                     {/* Metrics Grid */}
-                                    <div className="mt-3.5 pt-3 border-t border-gray-800/60 grid grid-cols-2 gap-4 text-xs">
+                                    <div className="mt-3.5 pt-3 border-t border-gray-200 dark:border-gray-800/60 grid grid-cols-2 gap-4 text-xs">
                                       <div>
                                         <span className="text-gray-500 block mb-0.5">EPS (กำไรต่อหุ้น)</span>
-                                        <div className="font-semibold flex items-center gap-1.5 text-white">
-                                          <span>Est: <strong className="text-gray-300">{item.epsEstimate != null ? `$${item.epsEstimate.toFixed(2)}` : '—'}</strong></span>
+                                        <div className="font-semibold flex items-center gap-1.5 text-gray-900 dark:text-white">
+                                          <span>Est: <strong className="text-gray-700 dark:text-gray-300">{item.epsEstimate != null ? `$${item.epsEstimate.toFixed(2)}` : '—'}</strong></span>
                                           {isPast && (
                                             <>
-                                              <span className="text-gray-600">|</span>
-                                              <span>Act: <strong className={isBeat ? 'text-green-400' : 'text-red-400'}>{`$${item.epsActual.toFixed(2)}`}</strong></span>
+                                              <span className="text-gray-300 dark:text-gray-600">|</span>
+                                              <span>Act: <strong className={isBeat ? 'text-green-600' : 'text-red-600'}>{`$${item.epsActual.toFixed(2)}`}</strong></span>
                                             </>
                                           )}
                                         </div>
                                       </div>
                                       <div>
                                         <span className="text-gray-500 block mb-0.5">Revenue (รายได้)</span>
-                                        <div className="font-semibold flex items-center gap-1.5 text-white">
-                                          <span>Est: <strong className="text-gray-300">
+                                        <div className="font-semibold flex items-center gap-1.5 text-gray-900 dark:text-white">
+                                          <span>Est: <strong className="text-gray-700 dark:text-gray-300">
                                             {item.revenueEstimate ? `$${(item.revenueEstimate / 1e9).toFixed(1)}B` : '—'}
                                           </strong></span>
                                           {isPast && item.revenueActual != null && (
                                             <>
-                                              <span className="text-gray-600">|</span>
-                                              <span>Act: <strong className={item.revenueActual >= item.revenueEstimate ? 'text-green-400' : 'text-red-400'}>
+                                              <span className="text-gray-300 dark:text-gray-600">|</span>
+                                              <span>Act: <strong className={item.revenueActual >= item.revenueEstimate ? 'text-green-600' : 'text-red-600'}>
                                                 {`$${(item.revenueActual / 1e9).toFixed(1)}B`}
                                               </strong></span>
                                             </>
@@ -628,30 +627,30 @@ export default function CalendarHub() {
                 {activeTab === 'dividends' && (
                   <>
                     {groupedDividends.length === 0 ? (
-                      <div className="text-center py-20 bg-gray-800/10 border border-gray-800/50 rounded-2xl text-gray-500 space-y-2">
+                      <div className="text-center py-20 bg-gray-50 dark:bg-gray-800/10 border border-gray-200 dark:border-gray-800/50 rounded-2xl text-gray-500 space-y-2">
                         <p className="text-base">📅 ไม่พบรายการปฏิทินการจ่ายเงินปันผล</p>
-                        <p className="text-xs text-gray-600">ลองขยายช่วงตัวเลือกเวลา หรือพิมพ์คำค้นหาใหม่อีกครั้ง</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-600">ลองขยายช่วงตัวเลือกเวลา หรือพิมพ์คำค้นหาใหม่อีกครั้ง</p>
                       </div>
                     ) : (
                       <div className="space-y-6">
                         {groupedDividends.map((group) => (
                           <div key={group.date} className="space-y-2.5">
                             {/* Date Group Header */}
-                            <div className="flex items-center gap-2.5 sticky top-14 bg-gray-900 py-2.5 z-10">
-                              <span className="text-xs font-extrabold text-blue-400 bg-blue-950/20 border border-blue-900/30 px-3 py-1 rounded-full uppercase tracking-wider">
+                            <div className="flex items-center gap-2.5 sticky top-14 bg-white dark:bg-gray-900 py-2.5 z-10">
+                              <span className="text-xs font-extrabold text-blue-600 dark:text-blue-400 bg-blue-500/5 dark:bg-blue-905/20 border border-blue-500/10 dark:border-blue-900/30 px-3 py-1 rounded-full uppercase tracking-wider">
                                 EX-DATE: {group.date}
                               </span>
                               <span className="text-xs font-bold text-gray-400">
                                 ({formatThaiDate(group.date)})
                               </span>
-                              <div className="flex-1 h-px bg-gray-800" />
+                              <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
                             </div>
 
                             {/* Table Layout for Desktop */}
-                            <div className="bg-gray-850 border border-gray-700/50 rounded-xl overflow-hidden hidden md:block">
+                            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-xl overflow-hidden hidden md:block">
                               <table className="w-full text-sm">
                                 <thead>
-                                  <tr className="border-b border-gray-850 bg-gray-800/40 text-left text-xs text-gray-500">
+                                  <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/40 text-left text-xs text-gray-600 dark:text-gray-500">
                                     <th className="px-4 py-3">หลักทรัพย์</th>
                                     <th className="px-4 py-3">ชื่อบริษัท</th>
                                     <th className="px-4 py-3 text-right">เงินปันผลต่อหุ้น</th>
@@ -664,28 +663,28 @@ export default function CalendarHub() {
                                   {group.items.map((item, idx) => (
                                     <tr 
                                       key={`${item.symbol}-${idx}`}
-                                      className="border-b border-gray-800/60 last:border-0 hover:bg-white/5 cursor-pointer transition-colors"
+                                      className="border-b border-gray-200 dark:border-gray-800/60 last:border-0 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer transition-colors"
                                       onClick={() => navigate(`/stock/${item.symbol}`)}
                                     >
-                                      <td className="px-4 py-3.5 font-bold text-white text-base">
+                                      <td className="px-4 py-3.5 font-bold text-gray-900 dark:text-white text-base">
                                         {item.symbol}
                                       </td>
-                                      <td className="px-4 py-3.5 text-gray-400">
+                                      <td className="px-4 py-3.5 text-gray-600 dark:text-gray-400">
                                         {item.name}
                                       </td>
-                                      <td className="px-4 py-3.5 text-right font-semibold text-white">
+                                      <td className="px-4 py-3.5 text-right font-semibold text-gray-900 dark:text-white">
                                         ${item.amount.toFixed(4)}
                                       </td>
-                                      <td className="px-4 py-3.5 text-right font-bold text-emerald-400">
+                                      <td className="px-4 py-3.5 text-right font-bold text-emerald-600 dark:text-emerald-400">
                                         {item.yield.toFixed(2)}%
                                       </td>
-                                      <td className="px-4 py-3.5 text-gray-400 font-medium">
+                                      <td className="px-4 py-3.5 text-gray-600 dark:text-gray-400 font-medium">
                                         {item.payDate}
                                       </td>
                                       <td className="px-4 py-3.5 text-center" onClick={(e) => e.stopPropagation()}>
                                         <button
                                           onClick={() => handleSelectCalcStock(item.symbol)}
-                                          className="p-1 px-2 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded transition-all"
+                                          className="p-1 px-2 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded transition-all cursor-pointer"
                                         >
                                           คำนวณเงิน
                                         </button>
@@ -702,34 +701,34 @@ export default function CalendarHub() {
                                 <div 
                                   key={`${item.symbol}-${idx}-mb`}
                                   onClick={() => navigate(`/stock/${item.symbol}`)}
-                                  className="bg-gray-800/30 border border-gray-700/40 hover:border-blue-500/50 rounded-xl p-4 cursor-pointer transition-all space-y-3"
+                                  className="bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700/40 hover:border-blue-500/50 rounded-xl p-4 cursor-pointer transition-all space-y-3"
                                 >
                                   <div className="flex items-start justify-between">
                                     <div>
-                                      <span className="font-extrabold text-white text-base">{item.symbol}</span>
+                                      <span className="font-extrabold text-gray-900 dark:text-white text-base">{item.symbol}</span>
                                       <span className="text-[10px] text-gray-500 block">{item.name}</span>
                                     </div>
                                     <div className="text-right">
                                       <span className="text-[10px] text-gray-500 block">Yield</span>
-                                      <span className="text-xs font-bold text-emerald-400">{item.yield.toFixed(2)}%</span>
+                                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{item.yield.toFixed(2)}%</span>
                                     </div>
                                   </div>
 
-                                  <div className="grid grid-cols-2 gap-2 text-xs border-t border-gray-800/80 pt-2 text-gray-400">
+                                  <div className="grid grid-cols-2 gap-2 text-xs border-t border-gray-200 dark:border-gray-800/80 pt-2 text-gray-600 dark:text-gray-400">
                                     <div>
                                       <span className="text-gray-500 text-[10px] block">ปันผลต่อหุ้น</span>
-                                      <strong className="text-white">${item.amount.toFixed(4)}</strong>
+                                      <strong className="text-gray-900 dark:text-white">${item.amount.toFixed(4)}</strong>
                                     </div>
                                     <div>
                                       <span className="text-gray-500 text-[10px] block">กำหนดจ่ายเงิน</span>
-                                      <strong className="text-white">{item.payDate}</strong>
+                                      <strong className="text-gray-900 dark:text-white">{item.payDate}</strong>
                                     </div>
                                   </div>
 
                                   <div className="pt-1 flex" onClick={(e) => e.stopPropagation()}>
                                     <button
                                       onClick={() => handleSelectCalcStock(item.symbol)}
-                                      className="w-full flex items-center justify-center gap-1 py-1.5 text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg"
+                                      className="w-full flex items-center justify-center gap-1 py-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg cursor-pointer"
                                     >
                                       <Calculator size={12} /> เลือกคำนวณปันผลของตนเอง
                                     </button>

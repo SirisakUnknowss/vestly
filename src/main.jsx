@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Layout from './components/Layout'
 import Home from './pages/Home'
+import AllStocks from './pages/AllStocks'
 import Watchlist from './pages/Watchlist'
 import StockDetail from './pages/StockDetail'
 import DividendPage from './pages/DividendPage'
@@ -44,6 +45,7 @@ function AppRoutes() {
         <Route path="/cookie-policy" element={<CookiePolicy />} />
         <Route element={<Layout><Routes>
           <Route path="/"          element={<Home />} />
+          <Route path="/stocks"    element={<AllStocks />} />
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/dividends" element={<DividendPage />} />
           <Route path="/calendar"  element={<CalendarHub />} />

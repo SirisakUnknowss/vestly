@@ -329,7 +329,7 @@ export default function DCACalculator() {
                           <strong className="text-white mr-1.5">{st.s}</strong>
                           <span className="text-[10px] text-gray-500">{st.n}</span>
                         </div>
-                        <span className="text-[9px] bg-gray-900 text-gray-500 px-1.5 py-0.5 rounded border border-gray-750">
+                        <span className="text-[9px] bg-gray-900 text-gray-500 px-1.5 py-0.5 rounded border border-gray-700">
                           {st.sec}
                         </span>
                       </button>
@@ -444,7 +444,7 @@ export default function DCACalculator() {
           <div className="lg:col-span-8 space-y-5">
             
             {loading && (
-              <div className="flex flex-col items-center justify-center py-32 bg-gray-850 border border-gray-850 rounded-2xl">
+              <div className="flex flex-col items-center justify-center py-32 bg-gray-50 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/50 rounded-2xl">
                 <div className="animate-spin w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full mb-3" />
                 <p className="text-sm text-gray-400">กำลังประมวลผลประวัติราคาย้อนหลัง...</p>
               </div>

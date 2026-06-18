@@ -86,7 +86,7 @@
 
 ---
 
-### 5. 💡 คำอธิบายตัวชี้วัด (Metric Glossary)
+### 5. 💡 คำอธิบายตัวชี้วัด (Metric Glossary) ✅ เสร็จแล้ว
 **เหมาะกับ:** มือใหม่โดยเฉพาะ
 
 ทุก metric ที่แสดง (P/E, ROE, EPS, Yield ฯลฯ) ควรมี tooltip หรือ popup อธิบายว่าคืออะไร ดูยังไง ดีหรือไม่ดีที่ตัวเลขเท่าไหร่
@@ -144,7 +144,7 @@
 
 ---
 
-### 9. 🧮 DCA Calculator (คำนวณลงทุนแบบ DCA)
+### 9. 🧮 DCA Calculator (คำนวณลงทุนแบบ DCA) ✅ เสร็จแล้ว
 **เหมาะกับ:** มือใหม่
 
 Dollar-Cost Averaging คือการลงทุนสม่ำเสมอทุกเดือน เป็น strategy ที่เหมาะสำหรับมือใหม่ที่สุด
@@ -157,7 +157,7 @@ Dollar-Cost Averaging คือการลงทุนสม่ำเสมอ�
 
 ---
 
-### 10. 🏭 Sector Heatmap (แผนที่ความร้อน Sector)
+### 10. 🏭 Sector Heatmap (แผนที่ความร้อน Sector) ✅ เสร็จแล้ว
 **เหมาะกับ:** ทุกคน
 
 แสดงภาพรวมตลาดแบบ Heatmap แสดงว่า Sector ไหนขึ้น/ลงวันนี้ บริษัทไหน Hot ที่สุด
@@ -214,7 +214,7 @@ Content สั้นๆ สอนพื้นฐานการลงทุน�
 
 ---
 
-### 14. 🤖 AI Stock Assistant (ถามตอบด้วย AI)
+### 14. 🤖 AI Stock Assistant (ถามตอบด้วย AI) ✅ เสร็จแล้ว
 **เหมาะกับ:** ทุกคน
 
 Chat กับ AI เพื่อถามเรื่องหุ้นได้เลย ไม่ต้องออกไปหาข้อมูลที่อื่น
@@ -271,8 +271,8 @@ Chat กับ AI เพื่อถามเรื่องหุ้นได�
 | ปัญหาปัจจุบัน | วิธีแก้ที่แนะนำ |
 |--------------|----------------|
 | Watchlist ต้อง Sign In ถึงใช้ได้ | ให้ Guest ใช้ Local Watchlist ได้ก่อน |
-| ไม่มี Dark Mode | เพิ่ม Dark Mode — นักลงทุนดูกราฟกลางคืนเยอะมาก |
-| Mobile UX ยังไม่ smooth | Bottom Navigation สำหรับ Mobile |
+| ไม่มี Dark Mode | เพิ่ม Dark Mode — ✅ เสร็จแล้ว |
+| Mobile UX ยังไม่ smooth | Bottom Navigation สำหรับ Mobile — ✅ เสร็จแล้ว |
 | ไม่มี Onboarding | Tutorial สั้นๆ สำหรับ User ใหม่ |
 | หน้า Stock Detail ไม่มี Peer Comparison | เพิ่ม "หุ้นในกลุ่มเดียวกัน" |
 
@@ -296,17 +296,17 @@ Chat กับ AI เพื่อถามเรื่องหุ้นได�
 |---------|--------|--------|----------|
 | Virtual Portfolio | ⭐⭐⭐⭐⭐ | Medium | 🔴 สูงมาก |
 | Price Alert | ⭐⭐⭐⭐⭐ | Low | 🔴 สูงมาก |
-| Metric Glossary (Tooltip) | ⭐⭐⭐⭐ | Low | 🔴 สูงมาก |
+| Metric Glossary (Tooltip) | ⭐⭐⭐⭐ | Low | ✅ เสร็จแล้ว |
 | Calendar (Earnings & Dividend Tabs) | ⭐⭐⭐⭐⭐ | Medium-High | ✅ เสร็จแล้ว |
 | Stock Compare | ⭐⭐⭐⭐ | Low | 🟠 สูง |
-| DCA Calculator | ⭐⭐⭐⭐ | Low | 🟠 สูง |
-| Dark Mode | ⭐⭐⭐⭐ | Low | 🟠 สูง |
+| DCA Calculator | ⭐⭐⭐⭐ | Low | ✅ เสร็จแล้ว |
+| Dark Mode | ⭐⭐⭐⭐ | Low | ✅ เสร็จแล้ว |
 | Advanced Screener | ⭐⭐⭐⭐ | Medium | 🟡 กลาง |
-| Sector Heatmap | ⭐⭐⭐ | Medium | 🟡 กลาง |
+| Sector Heatmap | ⭐⭐⭐ | Medium | ✅ เสร็จแล้ว |
 | News Feed | ⭐⭐⭐ | Medium | 🟡 กลาง |
 | Technical Indicators | ⭐⭐⭐ | High | 🟡 กลาง |
 | Vestly Academy | ⭐⭐⭐⭐ | High | 🟡 กลาง |
-| AI Assistant | ⭐⭐⭐⭐⭐ | High | 🟢 ระยะยาว |
+| AI Assistant | ⭐⭐⭐⭐⭐ | High | ✅ เสร็จแล้ว |
 | Portfolio Tracker | ⭐⭐⭐⭐⭐ | High | 🟢 ระยะยาว |
 | Insider Trading | ⭐⭐⭐ | High | 🟢 ระยะยาว |
 | Analyst Ratings | ⭐⭐⭐ | High | 🟢 ระยะยาว |

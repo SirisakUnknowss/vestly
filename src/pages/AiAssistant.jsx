@@ -329,7 +329,7 @@ export default function AiAssistant() {
               <Send size={14} />
             </button>
           </form>
-          <span className="text-[9px] text-gray-655 text-center block mt-1.5">
+          <span className="text-[9px] text-gray-500 text-center block mt-1.5">
             AI สามารถประมวลผลผิดพลาดได้ กรุณาตรวจสอบข้อมูลอีกครั้งก่อนตัดสินใจซื้อขายจริง
           </span>
         </div>
