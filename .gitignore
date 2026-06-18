@@ -1,4 +1,101 @@
-node_modules
-dist
-.DS_Store
+# ==========================================
+# Dependencies
+# ==========================================
+node_modules/
+.pnp
+.pnp.js
+
+# ==========================================
+# Build outputs
+# ==========================================
+dist/
+dist-ssr/
+build/
+out/
+
+# ==========================================
+# Environment variables (CRITICAL — contains API keys)
+# ==========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# ==========================================
+# Vite
+# ==========================================
 *.local
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# ==========================================
+# Logs
+# ==========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ==========================================
+# macOS
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ==========================================
+# Editors & IDEs
+# ==========================================
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.vim
+
+# ==========================================
+# Testing & Coverage
+# ==========================================
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# ==========================================
+# Cache
+# ==========================================
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.turbo/
+
+# ==========================================
+# Supabase
+# ==========================================
+.supabase/
+supabase/.temp/
+
+# ==========================================
+# gh-pages deployment
+# ==========================================
+.cache/
+
+# ==========================================
+# Misc
+# ==========================================
+*.tgz
+*.zip
+*.tar.gz
