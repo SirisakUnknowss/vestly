@@ -8,6 +8,9 @@ import Watchlist from './pages/Watchlist'
 import StockDetail from './pages/StockDetail'
 import DividendPage from './pages/DividendPage'
 import CalendarHub from './pages/CalendarHub'
+import DCACalculator from './pages/DCACalculator'
+import SectorHeatmap from './pages/SectorHeatmap'
+import AiAssistant from './pages/AiAssistant'
 import GrowthStocks from './pages/GrowthStocks'
 import HotMovers from './pages/HotMovers'
 import StockHunter from './pages/StockHunter'
@@ -44,6 +47,9 @@ function AppRoutes() {
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/dividends" element={<DividendPage />} />
           <Route path="/calendar"  element={<CalendarHub />} />
+          <Route path="/dca"       element={<DCACalculator />} />
+          <Route path="/heatmap"   element={<SectorHeatmap />} />
+          <Route path="/ai-assistant" element={<AiAssistant />} />
           <Route path="/growth"    element={<GrowthStocks />} />
           <Route path="/movers"    element={<HotMovers />} />
           <Route path="/hunter"   element={<StockHunter />} />

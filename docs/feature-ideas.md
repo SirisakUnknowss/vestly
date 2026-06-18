@@ -15,6 +15,7 @@
 | Hot Movers | Hot |
 | Stock Hunter — Scan → Financial → SWOT | Hunter |
 | Stock Detail + Chart 1D–1Y | /stock/:symbol |
+| Calendar Hub (ปฏิทินปันผล & ประกาศงบพร้อมเครื่องคำนวณ) | Calendar |
 
 ---
 
@@ -64,7 +65,7 @@
 
 ---
 
-### 4. 📅 Calendar Hub (ปฏิทินประกาศผลกำไร & ปันผล)
+### 4. 📅 Calendar Hub (ปฏิทินประกาศผลกำไร & ปันผล) ✅ เสร็จแล้ว
 **เหมาะกับ:** ทุกคน
 
 ออกแบบหน้า **Calendar** ให้เป็นศูนย์รวมปฏิทินเหตุการณ์สำคัญ โดยมีแท็บ/ตัวเลือก ให้เลือกสลับการแสดงผลระหว่าง **Earnings** และ **Dividend** เพื่อให้ประหยัดพื้นที่และไม่ทับซ้อนกัน
@@ -296,7 +297,7 @@ Chat กับ AI เพื่อถามเรื่องหุ้นได�
 | Virtual Portfolio | ⭐⭐⭐⭐⭐ | Medium | 🔴 สูงมาก |
 | Price Alert | ⭐⭐⭐⭐⭐ | Low | 🔴 สูงมาก |
 | Metric Glossary (Tooltip) | ⭐⭐⭐⭐ | Low | 🔴 สูงมาก |
-| Calendar (Earnings & Dividend Tabs) | ⭐⭐⭐⭐⭐ | Medium-High | 🔴 สูงมาก |
+| Calendar (Earnings & Dividend Tabs) | ⭐⭐⭐⭐⭐ | Medium-High | ✅ เสร็จแล้ว |
 | Stock Compare | ⭐⭐⭐⭐ | Low | 🟠 สูง |
 | DCA Calculator | ⭐⭐⭐⭐ | Low | 🟠 สูง |
 | Dark Mode | ⭐⭐⭐⭐ | Low | 🟠 สูง |

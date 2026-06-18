@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { DIVIDEND_STOCKS, SECTORS, FREQS } from '../data/dividendStocks'
 import { LYNCH_CATEGORIES, ALL_LYNCH_IDS } from '../utils/peterLynch'
+import MetricTooltip from '../components/MetricTooltip'
 
 const API_KEY = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const METRIC_CACHE_KEY = 'div_metrics_v2'
@@ -521,18 +522,28 @@ export default function DividendPage() {
                     <th className="pl-4 pr-2 py-3 w-8" />
                     <th className="px-3 py-3 text-left text-xs text-gray-400 font-medium">Symbol</th>
                     <th className="px-3 py-3 text-left text-xs text-gray-400 font-medium hidden md:table-cell">Sector</th>
-                    <th className="px-3 py-3 text-left text-xs text-gray-400 font-medium">Frequency</th>
+                    <th className="px-3 py-3 text-left text-xs text-gray-400 font-medium">Frequency<MetricTooltip id="freq" /></th>
                     <th className="px-3 py-3 text-right">
-                      <SortBtn col="price" label="Price" />
+                      <div className="flex items-center justify-end">
+                        <SortBtn col="price" label="Price" />
+                      </div>
                     </th>
                     <th className="px-3 py-3 text-right hidden sm:table-cell">
-                      <SortBtn col="change" label="Change" />
+                      <div className="flex items-center justify-end">
+                        <SortBtn col="change" label="Change" />
+                      </div>
                     </th>
                     <th className="px-3 py-3 text-right">
-                      <SortBtn col="annual" label="Annual Div" />
+                      <div className="flex items-center justify-end">
+                        <SortBtn col="annual" label="Annual Div" />
+                        <MetricTooltip id="annual" />
+                      </div>
                     </th>
                     <th className="px-3 py-3 text-right pr-4">
-                      <SortBtn col="yield" label="Yield" />
+                      <div className="flex items-center justify-end">
+                        <SortBtn col="yield" label="Yield" />
+                        <MetricTooltip id="yield" />
+                      </div>
                     </th>
                   </tr>
                 </thead>

@@ -15,6 +15,7 @@ import AiAnalyst from '../components/AiAnalyst'
 import RiskMatcher from '../components/RiskMatcher'
 import HealthScore from '../components/HealthScore'
 import TimeMachine from '../components/TimeMachine'
+import MetricTooltip from '../components/MetricTooltip'
 
 const FINNHUB_KEY  = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const TWELVE_KEY   = '1b5540bb3fc342e19f36f8bcffcce177'
@@ -456,10 +457,13 @@ export default function StockDetail() {
                   { label: 'Industry',   value: profile.finnhubIndustry },
                   { label: 'IPO Date',   value: profile.ipo },
                   { label: 'Market Cap', value: profile.marketCapitalization
-                      ? `$${(profile.marketCapitalization / 1000).toFixed(1)}B` : null },
+                      ? `$${(profile.marketCapitalization / 1000).toFixed(1)}B` : null, glossaryId: 'cap' },
                 ].filter(x => x.value).map(x => (
                   <div key={x.label} className="bg-gray-700/50 rounded-lg p-3">
-                    <p className="text-gray-400 text-xs mb-0.5">{x.label}</p>
+                    <p className="text-gray-400 text-xs mb-0.5 flex items-center justify-between">
+                      <span>{x.label}</span>
+                      {x.glossaryId && <MetricTooltip id={x.glossaryId} />}
+                    </p>
                     <p className="font-semibold truncate">{x.value}</p>
                   </div>
                 ))}
@@ -496,16 +500,19 @@ export default function StockDetail() {
                 {/* Metrics Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {[
-                    { label: 'Annual Dividend / Share', value: annualDiv   ? `$${annualDiv.toFixed(4)}`          : '—', highlight: true  },
-                    { label: 'Dividend / Share (TTM)',  value: divMetric.ttmDPS   ? `$${divMetric.ttmDPS.toFixed(4)}`   : '—' },
+                    { label: 'Annual Dividend / Share', value: annualDiv   ? `$${annualDiv.toFixed(4)}`          : '—', highlight: true, glossaryId: 'annual' },
+                    { label: 'Dividend / Share (TTM)',  value: divMetric.ttmDPS   ? `$${divMetric.ttmDPS.toFixed(4)}`   : '—', glossaryId: 'annual' },
                     { label: '5Y Dividend Growth',      value: divMetric.growth5y ? `${divMetric.growth5y.toFixed(2)}%` : '—',
-                      color: divMetric.growth5y > 0 ? 'text-green-400' : 'text-red-400' },
-                    { label: 'Payout Ratio',            value: divMetric.payoutRatio ? `${divMetric.payoutRatio.toFixed(1)}%` : '—' },
-                    { label: 'EPS (Annual)',             value: divMetric.eps ? `$${divMetric.eps.toFixed(2)}` : '—' },
-                    { label: 'Yield (TTM)',              value: divMetric.yieldTTM ? `${divMetric.yieldTTM.toFixed(2)}%` : '—' },
+                      color: divMetric.growth5y > 0 ? 'text-green-400' : 'text-red-400', glossaryId: 'growth5y' },
+                    { label: 'Payout Ratio',            value: divMetric.payoutRatio ? `${divMetric.payoutRatio.toFixed(1)}%` : '—', glossaryId: 'payout' },
+                    { label: 'EPS (Annual)',             value: divMetric.eps ? `$${divMetric.eps.toFixed(2)}` : '—', glossaryId: 'eps' },
+                    { label: 'Yield (TTM)',              value: divMetric.yieldTTM ? `${divMetric.yieldTTM.toFixed(2)}%` : '—', glossaryId: 'yield' },
                   ].map(item => (
                     <div key={item.label} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                      <p className="text-xs text-gray-500 mb-1.5 leading-tight">{item.label}</p>
+                      <p className="text-xs text-gray-500 mb-1.5 leading-tight flex items-center justify-between">
+                        <span>{item.label}</span>
+                        {item.glossaryId && <MetricTooltip id={item.glossaryId} />}
+                      </p>
                       <p className={`text-lg font-bold ${item.color || 'text-white'}`}>{item.value}</p>
                     </div>
                   ))}

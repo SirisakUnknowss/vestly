@@ -4,6 +4,7 @@ import { Star, Search, TrendingUp, TrendingDown, Wifi, WifiOff, X, BarChart2, Ch
 import { SP500 } from './sp500'
 import { classify, LYNCH_CATEGORIES, ALL_LYNCH_IDS } from './utils/peterLynch'
 import CookieConsent from './components/CookieConsent'
+import { useSP500Quotes } from './hooks/useSP500Quotes'
 
 // ─── Dividend frequency detection (shared helper) ────────────────
 function detectFreq(dividends) {
@@ -319,87 +320,7 @@ function StockCard({ symbol, wsPrice, quote, sp500Quote, starred, inWatchlist, o
   )
 }
 
-// ---------- S&P 500 Quotes via Finnhub (throttled + cached) ----------
-const CACHE_KEY = 'sp500_cache'
-const CACHE_TTL = 10 * 60 * 1000 // 10 minutes
-
-function useSP500Quotes() {
-  const [sp500Quotes, setSp500Quotes] = useState(() => {
-    try {
-      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null')
-      if (cached && Date.now() - cached.ts < CACHE_TTL) return cached.data
-    } catch {}
-    return {}
-  })
-  const [progress, setProgress] = useState(0)   // 0-100
-  const [loading, setLoading] = useState(false)
-  const [lastUpdated, setLastUpdated] = useState(() => {
-    try {
-      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null')
-      if (cached && Date.now() - cached.ts < CACHE_TTL) return new Date(cached.ts)
-    } catch {}
-    return null
-  })
-  const abortRef = useRef(false)
-
-  const fetchAll = useCallback(async () => {
-    abortRef.current = false
-    setLoading(true)
-    setProgress(0)
-
-    const results = {}
-    const CONCURRENCY = 8        // parallel requests per batch
-    const DELAY_MS   = 1100      // ~54 req/min safely under 60
-
-    for (let i = 0; i < SP500.length; i += CONCURRENCY) {
-      if (abortRef.current) break
-      const chunk = SP500.slice(i, i + CONCURRENCY)
-      await Promise.all(
-        chunk.map(async (symbol) => {
-          try {
-            const res = await fetch(
-              `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`
-            )
-            const data = await res.json()
-            if (data.c) {
-              results[symbol] = {
-                price: data.c,
-                change: data.d,
-                changePct: data.dp,
-                prevClose: data.pc,
-              }
-              setSp500Quotes(prev => ({ ...prev, [symbol]: results[symbol] }))
-            }
-          } catch {}
-        })
-      )
-      const done = Math.min(i + CONCURRENCY, SP500.length)
-      setProgress(Math.round((done / SP500.length) * 100))
-      if (i + CONCURRENCY < SP500.length) {
-        await new Promise(r => setTimeout(r, DELAY_MS))
-      }
-    }
-
-    const now = new Date()
-    setLastUpdated(now)
-    setLoading(false)
-    setProgress(100)
-    try {
-      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: now.getTime(), data: results }))
-    } catch {}
-  }, [])
-
-  useEffect(() => {
-    // Auto-fetch if no valid cache
-    try {
-      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null')
-      if (!cached || Date.now() - cached.ts >= CACHE_TTL) fetchAll()
-    } catch { fetchAll() }
-    return () => { abortRef.current = true }
-  }, [])
-
-  return { sp500Quotes, loading, progress, lastUpdated, refetch: fetchAll }
-}
+// ---------- S&P 500 Quotes via hooks ----------
 
 // ---------- Top Movers Panel ----------
 function TopMoversPanel({ sp500Quotes, loading, progress, lastUpdated, refetch, onClose }) {

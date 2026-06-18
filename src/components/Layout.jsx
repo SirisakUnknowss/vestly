@@ -2,7 +2,8 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import {
   Home, Star, DollarSign, TrendingUp, Flame,
-  Target, Sun, Moon, Monitor, Search, Calendar
+  Target, Sun, Moon, Monitor, Search, Calendar,
+  Calculator, LayoutGrid, Bot
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme'
 import { useAnalytics } from '../hooks/useAnalytics'
@@ -18,9 +19,20 @@ const NAV = [
   { to: '/watchlist', icon: Star,        label: 'Watchlist'  },
   { to: '/dividends', icon: DollarSign,  label: 'Dividends'  },
   { to: '/calendar',  icon: Calendar,    label: 'Calendar'   },
+  { to: '/dca',       icon: Calculator,  label: 'DCA'        },
+  { to: '/heatmap',   icon: LayoutGrid,  label: 'Heatmap'    },
+  { to: '/ai-assistant', icon: Bot,      label: 'AI Chat'    },
   { to: '/growth',    icon: TrendingUp,  label: 'Growth'     },
   { to: '/movers',    icon: Flame,       label: 'Hot'        },
   { to: '/hunter',    icon: Target,      label: 'Hunter'     },
+]
+
+const MOBILE_NAV = [
+  { to: '/',          icon: Home,        label: 'Markets'    },
+  { to: '/watchlist', icon: Star,        label: 'Watchlist'  },
+  { to: '/calendar',  icon: Calendar,    label: 'Calendar'   },
+  { to: '/dca',       icon: Calculator,  label: 'DCA'        },
+  { to: '/ai-assistant', icon: Bot,      label: 'AI Chat'    },
 ]
 
 const THEME_OPTIONS = [
@@ -167,7 +179,7 @@ export default function Layout({ children }) {
 
         {/* ── Mobile bottom nav ── */}
         <div className="md:hidden flex border-t" style={{ borderColor: 'var(--border)' }}>
-          {NAV.map(({ to, icon: Icon, label }) => (
+          {MOBILE_NAV.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
               to={to}
