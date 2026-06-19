@@ -16,6 +16,9 @@ import GrowthStocks from './pages/GrowthStocks'
 import HotMovers from './pages/HotMovers'
 import StockHunter from './pages/StockHunter'
 import CookiePolicy from './pages/CookiePolicy'
+import InvestmentJournal from './pages/InvestmentJournal'
+import AdvancedScreener from './pages/AdvancedScreener'
+import MacroDashboard from './pages/MacroDashboard'
 import AdminLayout from './components/admin/AdminLayout'
 import Dashboard from './pages/admin/Dashboard'
 import Login from './pages/admin/Login'
@@ -55,6 +58,9 @@ function AppRoutes() {
           <Route path="/growth"    element={<GrowthStocks />} />
           <Route path="/movers"    element={<HotMovers />} />
           <Route path="/hunter"   element={<StockHunter />} />
+          <Route path="/journal"  element={<InvestmentJournal />} />
+          <Route path="/screener" element={<AdvancedScreener />} />
+          <Route path="/macro"    element={<MacroDashboard />} />
         </Routes></Layout>}>
           <Route path="*" element={null} />
         </Route>

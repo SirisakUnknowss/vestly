@@ -3,7 +3,8 @@ import { useState } from 'react'
 import {
   Home, Star, DollarSign, TrendingUp, Flame,
   Target, Sun, Moon, Monitor, Search, Calendar,
-  Calculator, LayoutGrid, Bot
+  Calculator, LayoutGrid, Bot, BookOpen, SlidersHorizontal,
+  Globe
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme'
 import { useAnalytics } from '../hooks/useAnalytics'
@@ -30,6 +31,7 @@ const CATEGORIES = [
     to: '/stocks',
     sub: [
       { to: '/stocks', label: 'All Stocks', icon: Search },
+      { to: '/screener', label: 'Advanced Screener', icon: SlidersHorizontal },
       { to: '/hunter', label: 'Stock Hunter', icon: Target },
       { to: '/dividends', label: 'Dividends', icon: DollarSign },
       { to: '/growth', label: 'Growth Stocks', icon: TrendingUp },
@@ -43,7 +45,9 @@ const CATEGORIES = [
     sub: [
       { to: '/calendar', label: 'Calendar Hub', icon: Calendar },
       { to: '/dca', label: 'DCA Calculator', icon: Calculator },
-      { to: '/heatmap', label: 'Sector Heatmap', icon: LayoutGrid }
+      { to: '/heatmap', label: 'Sector Heatmap', icon: LayoutGrid },
+      { to: '/journal', label: 'Investment Journal', icon: BookOpen },
+      { to: '/macro', label: 'Macro Dashboard', icon: Globe }
     ]
   },
   {

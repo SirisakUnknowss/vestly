@@ -16,6 +16,11 @@
 | Stock Hunter — Scan → Financial → SWOT | Hunter |
 | Stock Detail + Chart 1D–1Y | /stock/:symbol |
 | Calendar Hub (ปฏิทินปันผล & ประกาศงบพร้อมเครื่องคำนวณ) | Calendar |
+| Advanced Screener (ตัวกรองขั้นสูง) | Screener |
+| Macro Dashboard (ภาพรวมเศรษฐกิจ) | Macro |
+| Investment Journal (บันทึกการลงทุน) | Journal |
+| Technical Indicators (ตัวชี้วัดทางเทคนิค) | /stock/:symbol (Tabs) |
+| Analyst Ratings (Rating จากนักวิเคราะห์) | /stock/:symbol (Tabs) |
 
 ---
 
@@ -113,7 +118,7 @@
 
 ---
 
-### 7. 📐 Technical Indicators (ตัวชี้วัดทางเทคนิค)
+### 7. 📐 Technical Indicators (ตัวชี้วัดทางเทคนิค) ✅ เสร็จแล้ว
 **เหมาะกับ:** นักลงทุนระดับกลางขึ้นไป
 
 เพิ่มเส้น Indicator บนกราฟใน Stock Detail
@@ -127,7 +132,7 @@
 
 ---
 
-### 8. 🔍 Advanced Screener (ตัวกรองขั้นสูง)
+### 8. 🔍 Advanced Screener (ตัวกรองขั้นสูง) ✅ เสร็จแล้ว
 **เหมาะกับ:** นักลงทุน Value / Growth
 
 ค้นหาหุ้นด้วยเกณฑ์หลายอย่างพร้อมกัน
@@ -166,7 +171,7 @@ Dollar-Cost Averaging คือการลงทุนสม่ำเสมอ�
 
 ---
 
-### 11. 📓 Investment Journal (บันทึกการลงทุน)
+### 11. 📓 Investment Journal (บันทึกการลงทุน) ✅ เสร็จแล้ว
 **เหมาะกับ:** นักลงทุนที่อยากพัฒนาตัวเอง
 
 บันทึก "Investment Thesis" ของแต่ละหุ้นที่ซื้อ — ซื้อเพราะอะไร? คาดหวังอะไร? ผลที่ได้จริง?
@@ -238,7 +243,7 @@ Chat กับ AI เพื่อถามเรื่องหุ้นได�
 
 ---
 
-### 16. 📊 Analyst Ratings (Rating จากนักวิเคราะห์)
+### 16. 📊 Analyst Ratings (Rating จากนักวิเคราะห์) ✅ เสร็จแล้ว
 **เหมาะกับ:** ทุกคน
 
 ดู consensus rating จากนักวิเคราะห์ Wall Street: Buy / Hold / Sell พร้อม Price Target
@@ -251,7 +256,7 @@ Chat กับ AI เพื่อถามเรื่องหุ้นได�
 
 ---
 
-### 17. 🌐 Macro Dashboard (ภาพรวมเศรษฐกิจ)
+### 17. 🌐 Macro Dashboard (ภาพรวมเศรษฐกิจ) ✅ เสร็จแล้ว
 **เหมาะกับ:** นักลงทุนที่ดูภาพใหญ่
 
 ข้อมูล Macro สำคัญที่กระทบตลาดหุ้น
@@ -301,16 +306,17 @@ Chat กับ AI เพื่อถามเรื่องหุ้นได�
 | Stock Compare | ⭐⭐⭐⭐ | Low | 🟠 สูง |
 | DCA Calculator | ⭐⭐⭐⭐ | Low | ✅ เสร็จแล้ว |
 | Dark Mode | ⭐⭐⭐⭐ | Low | ✅ เสร็จแล้ว |
-| Advanced Screener | ⭐⭐⭐⭐ | Medium | 🟡 กลาง |
+| Advanced Screener | ⭐⭐⭐⭐ | Medium | ✅ เสร็จแล้ว |
 | Sector Heatmap | ⭐⭐⭐ | Medium | ✅ เสร็จแล้ว |
 | News Feed | ⭐⭐⭐ | Medium | 🟡 กลาง |
-| Technical Indicators | ⭐⭐⭐ | High | 🟡 กลาง |
+| Technical Indicators | ⭐⭐⭐ | High | ✅ เสร็จแล้ว |
+| Investment Journal | ⭐⭐⭐⭐ | Medium | ✅ เสร็จแล้ว |
 | Vestly Academy | ⭐⭐⭐⭐ | High | 🟡 กลาง |
 | AI Assistant | ⭐⭐⭐⭐⭐ | High | ✅ เสร็จแล้ว |
 | Portfolio Tracker | ⭐⭐⭐⭐⭐ | High | 🟢 ระยะยาว |
 | Insider Trading | ⭐⭐⭐ | High | 🟢 ระยะยาว |
-| Analyst Ratings | ⭐⭐⭐ | High | 🟢 ระยะยาว |
-| Macro Dashboard | ⭐⭐⭐ | Medium | 🟢 ระยะยาว |
+| Analyst Ratings | ⭐⭐⭐ | High | ✅ เสร็จแล้ว |
+| Macro Dashboard | ⭐⭐⭐ | Medium | ✅ เสร็จแล้ว |
 
 ---
 

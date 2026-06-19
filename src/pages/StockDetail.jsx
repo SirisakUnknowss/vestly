@@ -1,13 +1,15 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft, Star, TrendingUp, TrendingDown, RefreshCw,
-  DollarSign, Calendar, BarChart2, Newspaper, ArrowUpRight, ArrowDownRight
+  DollarSign, Calendar, BarChart2, Newspaper, ArrowUpRight, ArrowDownRight,
+  Activity, Target, ToggleLeft, ToggleRight
 } from 'lucide-react'
 import { classify, LYNCH_CATEGORIES } from '../utils/peterLynch'
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis,
-  Tooltip, CartesianGrid, ReferenceLine
+  Tooltip, CartesianGrid, ReferenceLine, Line, ComposedChart,
+  Bar, BarChart as RechartsBarChart, Cell, ReferenceDot
 } from 'recharts'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
@@ -16,6 +18,7 @@ import RiskMatcher from '../components/RiskMatcher'
 import HealthScore from '../components/HealthScore'
 import TimeMachine from '../components/TimeMachine'
 import MetricTooltip from '../components/MetricTooltip'
+import { computeTechnicalIndicators } from '../utils/indicators'
 
 const FINNHUB_KEY  = 'd8fg29hr01qn4439pm7gd8fg29hr01qn4439pm80'
 const TWELVE_KEY   = '1b5540bb3fc342e19f36f8bcffcce177'
@@ -83,6 +86,16 @@ export default function StockDetail() {
   const [newsLoad,      setNewsLoad]      = useState(false)
   const [fetchedNewsSymbol, setFetchedNewsSymbol] = useState(null)
 
+  // Technical Indicators state
+  const [indicatorConfig, setIndicatorConfig] = useState({ ma50: false, ma200: false, bb: false, rsi: false, macd: false })
+  const [extChartData, setExtChartData] = useState([])
+  const [extChartLoad, setExtChartLoad] = useState(false)
+
+  // Analyst Ratings state
+  const [analystData, setAnalystData] = useState(null)
+  const [priceTarget, setPriceTarget] = useState(null)
+  const [analystLoad, setAnalystLoad] = useState(false)
+
   const { user } = useAuth()
   
   const [lynchCat,  setLynchCat]  = useState(() => {
@@ -92,7 +105,7 @@ export default function StockDetail() {
     } catch { return null }
   })
   const [starred,   setStarred]   = useState([])
-  const [activeTab, setActiveTab] = useState('chart') // chart | dividend | news
+  const [activeTab, setActiveTab] = useState('chart') // chart | dividend | news | technical | analyst
 
   useEffect(() => {
     if (user) {
@@ -231,6 +244,58 @@ export default function StockDetail() {
     }
   }, [activeTab, symbol, fetchedNewsSymbol, fetchNews])
 
+  // ── Fetch Extended Data for Technical Indicators ───────────
+  useEffect(() => {
+    if (activeTab !== 'technical') return
+    if (extChartData.length > 0) return
+    setExtChartLoad(true)
+    const params = new URLSearchParams({
+      symbol, interval: '1day', outputsize: 365,
+      apikey: TWELVE_KEY, order: 'ASC',
+    })
+    fetch(`${TWELVE_BASE}/time_series?${params}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.values) {
+          setExtChartData(data.values.map(v => ({
+            datetime: v.datetime,
+            label: new Date(v.datetime).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            price: parseFloat(v.close),
+            open: parseFloat(v.open),
+            high: parseFloat(v.high),
+            low: parseFloat(v.low),
+            volume: parseInt(v.volume),
+          })))
+        }
+      })
+      .catch(() => {})
+      .finally(() => setExtChartLoad(false))
+  }, [activeTab, symbol, extChartData.length])
+
+  // ── Compute indicators on extended data ────────────────────
+  const techChartData = useMemo(() => {
+    if (extChartData.length === 0) return []
+    const deepCopy = extChartData.map(d => ({ ...d }))
+    return computeTechnicalIndicators(deepCopy, indicatorConfig)
+  }, [extChartData, indicatorConfig])
+
+  // ── Fetch Analyst Ratings & Price Target ───────────────────
+  useEffect(() => {
+    if (activeTab !== 'analyst') return
+    if (analystData) return
+    setAnalystLoad(true)
+    Promise.all([
+      fetch(`https://finnhub.io/api/v1/stock/recommendation?symbol=${symbol}&token=${FINNHUB_KEY}`).then(r => r.json()),
+      fetch(`https://finnhub.io/api/v1/stock/price-target?symbol=${symbol}&token=${FINNHUB_KEY}`).then(r => r.json()),
+    ]).then(([recData, ptData]) => {
+      setAnalystData(Array.isArray(recData) ? recData.slice(0, 8) : [])
+      setPriceTarget(ptData?.targetHigh ? ptData : null)
+    }).catch(() => {
+      setAnalystData([])
+      setPriceTarget(null)
+    }).finally(() => setAnalystLoad(false))
+  }, [activeTab, symbol, analystData])
+
   // ── Computed values ──────────────────────────────────────────
   const livePrice    = quote?.c
   const todayChange  = quote?.d
@@ -320,16 +385,18 @@ export default function StockDetail() {
         />
 
         {/* ── Tabs ── */}
-        <div className="flex gap-1 bg-gray-800 rounded-xl p-1 w-fit">
+        <div className="flex gap-1 bg-gray-800 rounded-xl p-1 w-fit overflow-x-auto no-scrollbar">
           {[
-            { id: 'chart',    icon: BarChart2,  label: 'Chart'    },
-            { id: 'dividend', icon: DollarSign, label: 'Dividend' },
-            { id: 'news',     icon: Newspaper,  label: 'News'     },
+            { id: 'chart',     icon: BarChart2,  label: 'Chart'     },
+            { id: 'technical', icon: Activity,   label: 'Technical' },
+            { id: 'analyst',   icon: Target,     label: 'Analyst'   },
+            { id: 'dividend',  icon: DollarSign, label: 'Dividend'  },
+            { id: 'news',      icon: Newspaper,  label: 'News'      },
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-medium transition-all shrink-0 ${
                 activeTab === tab.id ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -472,6 +539,267 @@ export default function StockDetail() {
           )}
 
         </>)}
+
+        {/* ══════════════ TECHNICAL TAB ══════════════ */}
+        {activeTab === 'technical' && (
+          <div className="space-y-4">
+            {extChartLoad ? (
+              <div className="h-40 flex items-center justify-center text-gray-500 gap-2">
+                <RefreshCw size={18} className="animate-spin" /> Loading 1-year price data for indicators...
+              </div>
+            ) : techChartData.length === 0 ? (
+              <div className="h-40 flex items-center justify-center text-gray-500">No data available</div>
+            ) : (
+              <>
+                {/* Indicator Toggles */}
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { key: 'ma50',  label: 'MA50',  color: '#f59e0b' },
+                    { key: 'ma200', label: 'MA200', color: '#ef4444' },
+                    { key: 'bb',    label: 'Bollinger', color: '#8b5cf6' },
+                    { key: 'rsi',   label: 'RSI',   color: '#06b6d4' },
+                    { key: 'macd',  label: 'MACD',  color: '#10b981' },
+                  ].map(ind => (
+                    <button
+                      key={ind.key}
+                      onClick={() => setIndicatorConfig(prev => ({ ...prev, [ind.key]: !prev[ind.key] }))}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
+                        indicatorConfig[ind.key]
+                          ? 'bg-gray-700 text-white border-gray-600'
+                          : 'text-gray-400 hover:text-white hover:bg-gray-800 border-gray-700/50'
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: indicatorConfig[ind.key] ? ind.color : '#4b5563' }} />
+                      {ind.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Main Price Chart with Overlays */}
+                <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                  <h3 className="text-sm font-bold text-gray-300 mb-3">Price Chart (1Y) with Overlays</h3>
+                  <div style={{ width: '100%', height: 320 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ComposedChart data={techChartData.slice(-180)} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
+                        <defs>
+                          <linearGradient id="techGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#22c55e" stopOpacity={0.2} />
+                            <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
+                        <XAxis dataKey="label" tick={{ fill: '#6b7280', fontSize: 10 }} tickLine={false} axisLine={false} interval={Math.floor(techChartData.slice(-180).length / 8)} />
+                        <YAxis domain={['auto', 'auto']} tick={{ fill: '#6b7280', fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={v => `$${v.toFixed(0)}`} width={55} orientation="right" />
+                        <Tooltip content={<ChartTooltip interval="1day" />} />
+                        <Area type="monotone" dataKey="price" stroke="#22c55e" strokeWidth={2} fill="url(#techGrad)" dot={false} />
+                        {indicatorConfig.ma50 && <Line type="monotone" dataKey="ma50" stroke="#f59e0b" strokeWidth={1.5} dot={false} strokeDasharray="4 2" />}
+                        {indicatorConfig.ma200 && <Line type="monotone" dataKey="ma200" stroke="#ef4444" strokeWidth={1.5} dot={false} strokeDasharray="4 2" />}
+                        {indicatorConfig.bb && <>
+                          <Line type="monotone" dataKey="bbUpper" stroke="#8b5cf6" strokeWidth={1} dot={false} strokeOpacity={0.6} />
+                          <Line type="monotone" dataKey="bbLower" stroke="#8b5cf6" strokeWidth={1} dot={false} strokeOpacity={0.6} />
+                          <Line type="monotone" dataKey="bbMiddle" stroke="#8b5cf6" strokeWidth={1} dot={false} strokeDasharray="3 3" strokeOpacity={0.4} />
+                        </>}
+                      </ComposedChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Volume Chart */}
+                <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                  <h3 className="text-sm font-bold text-gray-300 mb-3">Volume</h3>
+                  <div style={{ width: '100%', height: 120 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RechartsBarChart data={techChartData.slice(-180)} margin={{ top: 5, right: 10, bottom: 0, left: 0 }}>
+                        <XAxis dataKey="label" tick={{ fill: '#6b7280', fontSize: 9 }} tickLine={false} axisLine={false} interval={Math.floor(techChartData.slice(-180).length / 6)} />
+                        <YAxis tick={{ fill: '#6b7280', fontSize: 9 }} tickLine={false} axisLine={false} tickFormatter={v => v >= 1e6 ? `${(v/1e6).toFixed(0)}M` : `${(v/1e3).toFixed(0)}K`} width={45} />
+                        <Tooltip formatter={(val) => [val?.toLocaleString(), 'Volume']} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: 8, fontSize: 11 }} />
+                        <Bar dataKey="volume" fill="#374151" radius={[2, 2, 0, 0]}>
+                          {techChartData.slice(-180).map((entry, idx) => (
+                            <Cell key={idx} fill={entry.price >= (techChartData.slice(-180)[idx-1]?.price ?? entry.price) ? '#22c55e40' : '#ef444440'} />
+                          ))}
+                        </Bar>
+                      </RechartsBarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* RSI Chart */}
+                {indicatorConfig.rsi && (
+                  <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                    <h3 className="text-sm font-bold text-gray-300 mb-3">RSI (14)</h3>
+                    <div style={{ width: '100%', height: 140 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <ComposedChart data={techChartData.slice(-180)} margin={{ top: 5, right: 10, bottom: 0, left: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
+                          <XAxis dataKey="label" tick={{ fill: '#6b7280', fontSize: 9 }} tickLine={false} axisLine={false} interval={Math.floor(techChartData.slice(-180).length / 6)} />
+                          <YAxis domain={[0, 100]} ticks={[30, 50, 70]} tick={{ fill: '#6b7280', fontSize: 9 }} tickLine={false} axisLine={false} width={30} />
+                          <ReferenceLine y={70} stroke="#ef4444" strokeDasharray="3 3" strokeOpacity={0.5} />
+                          <ReferenceLine y={30} stroke="#22c55e" strokeDasharray="3 3" strokeOpacity={0.5} />
+                          <Tooltip formatter={(val) => [val?.toFixed(1), 'RSI']} contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: 8, fontSize: 11 }} />
+                          <Area type="monotone" dataKey="rsi" stroke="#06b6d4" strokeWidth={1.5} fill="#06b6d420" dot={false} />
+                        </ComposedChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+
+                {/* MACD Chart */}
+                {indicatorConfig.macd && (
+                  <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                    <h3 className="text-sm font-bold text-gray-300 mb-3">MACD (12, 26, 9)</h3>
+                    <div style={{ width: '100%', height: 160 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <ComposedChart data={techChartData.slice(-180)} margin={{ top: 5, right: 10, bottom: 0, left: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
+                          <XAxis dataKey="label" tick={{ fill: '#6b7280', fontSize: 9 }} tickLine={false} axisLine={false} interval={Math.floor(techChartData.slice(-180).length / 6)} />
+                          <YAxis tick={{ fill: '#6b7280', fontSize: 9 }} tickLine={false} axisLine={false} width={45} />
+                          <Tooltip contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: 8, fontSize: 11 }} />
+                          <ReferenceLine y={0} stroke="#374151" strokeWidth={1} />
+                          <Bar dataKey="macdHist" name="Histogram">
+                            {techChartData.slice(-180).map((entry, idx) => (
+                              <Cell key={idx} fill={(entry.macdHist ?? 0) >= 0 ? '#22c55e80' : '#ef444480'} />
+                            ))}
+                          </Bar>
+                          <Line type="monotone" dataKey="macd" name="MACD" stroke="#10b981" strokeWidth={1.5} dot={false} />
+                          <Line type="monotone" dataKey="macdSignal" name="Signal" stroke="#f59e0b" strokeWidth={1.5} dot={false} />
+                        </ComposedChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+
+                {/* Legend */}
+                <div className="flex flex-wrap gap-4 text-[10px] text-gray-500 px-2">
+                  {indicatorConfig.ma50 && <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-amber-500 inline-block" /> MA50</span>}
+                  {indicatorConfig.ma200 && <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-red-500 inline-block" /> MA200</span>}
+                  {indicatorConfig.bb && <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-violet-500 inline-block" /> Bollinger Bands</span>}
+                  {indicatorConfig.rsi && <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-cyan-500 inline-block" /> RSI (70/30 thresholds)</span>}
+                  {indicatorConfig.macd && <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-emerald-500 inline-block" /> MACD / <span className="w-3 h-0.5 bg-amber-500 inline-block" /> Signal</span>}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* ══════════════ ANALYST TAB ══════════════ */}
+        {activeTab === 'analyst' && (
+          <div className="space-y-4">
+            {analystLoad ? (
+              <div className="h-40 flex items-center justify-center text-gray-500 gap-2">
+                <RefreshCw size={18} className="animate-spin" /> Loading analyst ratings...
+              </div>
+            ) : (
+              <>
+                {/* Price Target */}
+                {priceTarget && (
+                  <div className="bg-gradient-to-br from-blue-900/40 to-gray-800 rounded-2xl p-6 border border-blue-700/30">
+                    <h3 className="text-sm font-bold text-gray-300 mb-4 flex items-center gap-2">
+                      <Target size={16} className="text-blue-400" /> Analyst Price Target
+                    </h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      <div className="text-center">
+                        <p className="text-xs text-gray-500 mb-1">Low</p>
+                        <p className="text-xl font-bold text-red-400">${priceTarget.targetLow?.toFixed(2)}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs text-gray-500 mb-1">Median</p>
+                        <p className="text-xl font-bold text-yellow-400">${priceTarget.targetMedian?.toFixed(2)}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs text-gray-500 mb-1">Mean</p>
+                        <p className="text-xl font-bold text-blue-400">${priceTarget.targetMean?.toFixed(2)}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs text-gray-500 mb-1">High</p>
+                        <p className="text-xl font-bold text-emerald-400">${priceTarget.targetHigh?.toFixed(2)}</p>
+                      </div>
+                    </div>
+                    {livePrice && priceTarget.targetMean && (
+                      <div className="mt-4 text-center">
+                        <p className="text-sm text-gray-400">Upside Potential from ${livePrice.toFixed(2)}</p>
+                        <p className={`text-2xl font-black ${
+                          ((priceTarget.targetMean - livePrice) / livePrice * 100) >= 0 ? 'text-emerald-400' : 'text-red-400'
+                        }`}>
+                          {((priceTarget.targetMean - livePrice) / livePrice * 100) >= 0 ? '+' : ''}
+                          {((priceTarget.targetMean - livePrice) / livePrice * 100).toFixed(1)}%
+                        </p>
+                        <p className="text-[10px] text-gray-500 mt-1">Based on {priceTarget.lastUpdated ? `${new Date(priceTarget.lastUpdated).toLocaleDateString()} update` : 'latest data'}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Recommendation Trend */}
+                {analystData && analystData.length > 0 ? (
+                  <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700">
+                    <h3 className="text-sm font-bold text-gray-300 mb-4">Recommendation Trend</h3>
+                    <div className="space-y-3">
+                      {analystData.map((rec, idx) => {
+                        const total = (rec.strongBuy || 0) + (rec.buy || 0) + (rec.hold || 0) + (rec.sell || 0) + (rec.strongSell || 0)
+                        if (total === 0) return null
+                        return (
+                          <div key={idx} className="space-y-1.5">
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-gray-400 font-mono">{rec.period?.slice(0, 7)}</span>
+                              <span className="text-gray-500">{total} analysts</span>
+                            </div>
+                            <div className="h-5 w-full bg-gray-900 rounded-full overflow-hidden flex text-[9px] font-bold">
+                              {rec.strongBuy > 0 && (
+                                <div className="bg-emerald-500 h-full flex items-center justify-center text-white" style={{ width: `${(rec.strongBuy/total)*100}%` }}>
+                                  {rec.strongBuy > 1 && rec.strongBuy}
+                                </div>
+                              )}
+                              {rec.buy > 0 && (
+                                <div className="bg-green-400 h-full flex items-center justify-center text-gray-900" style={{ width: `${(rec.buy/total)*100}%` }}>
+                                  {rec.buy > 1 && rec.buy}
+                                </div>
+                              )}
+                              {rec.hold > 0 && (
+                                <div className="bg-yellow-400 h-full flex items-center justify-center text-gray-900" style={{ width: `${(rec.hold/total)*100}%` }}>
+                                  {rec.hold > 1 && rec.hold}
+                                </div>
+                              )}
+                              {rec.sell > 0 && (
+                                <div className="bg-orange-400 h-full flex items-center justify-center text-white" style={{ width: `${(rec.sell/total)*100}%` }}>
+                                  {rec.sell > 1 && rec.sell}
+                                </div>
+                              )}
+                              {rec.strongSell > 0 && (
+                                <div className="bg-red-500 h-full flex items-center justify-center text-white" style={{ width: `${(rec.strongSell/total)*100}%` }}>
+                                  {rec.strongSell > 1 && rec.strongSell}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                    {/* Legend */}
+                    <div className="flex flex-wrap gap-3 mt-4 text-[10px]">
+                      <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-emerald-500" /> Strong Buy</span>
+                      <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-green-400" /> Buy</span>
+                      <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-yellow-400" /> Hold</span>
+                      <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-orange-400" /> Sell</span>
+                      <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-red-500" /> Strong Sell</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-gray-800 rounded-2xl p-10 border border-gray-700 text-center">
+                    <Target size={40} className="text-gray-600 mx-auto mb-3" />
+                    <p className="text-gray-300 font-semibold text-lg">ไม่มีข้อมูล Analyst Rating</p>
+                    <p className="text-gray-500 text-sm mt-1">{symbol} does not have analyst coverage</p>
+                  </div>
+                )}
+
+                {/* Info note */}
+                <div className="flex items-start gap-2 px-4 py-3 bg-blue-900/20 border border-blue-700/30 rounded-xl text-xs text-blue-300">
+                  <Target size={14} className="shrink-0 mt-0.5" />
+                  <span>ข้อมูลจาก Finnhub Analyst Recommendations API • Consensus จาก Wall Street analysts • ไม่ใช่คำแนะนำการลงทุน</span>
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         {/* ══════════════ DIVIDEND TAB ══════════════ */}
         {activeTab === 'dividend' && (
