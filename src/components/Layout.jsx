@@ -4,7 +4,7 @@ import {
   Home, Star, DollarSign, TrendingUp, Flame,
   Target, Sun, Moon, Monitor, Search, Calendar,
   Calculator, LayoutGrid, Bot, BookOpen, SlidersHorizontal,
-  Globe
+  Globe, UserCircle
 } from 'lucide-react'
 import { useTheme } from '../hooks/useTheme'
 import { useAnalytics } from '../hooks/useAnalytics'
@@ -64,8 +64,8 @@ const MOBILE_NAV = [
   { to: '/',             icon: Home,        label: 'Market Hub' },
   { to: '/watchlist',    icon: Star,        label: 'Watchlist'  },
   { to: '/stocks',       icon: Search,      label: 'Screener'   },
-  { to: '/calendar',     icon: Calendar,    label: 'Tools'      },
-  { to: '/ai-assistant', icon: Bot,        label: 'AI Chat'    },
+  { to: '/ai-assistant', icon: Bot,         label: 'AI Chat'    },
+  { to: '/auth',         icon: UserCircle,  label: 'Profile'    },
 ]
 
 const THEME_OPTIONS = [
@@ -203,9 +203,9 @@ export default function Layout({ children }) {
                 )}
               </>
             ) : (
-              <button 
+              <button
                 onClick={() => navigate('/auth')}
-                className="hidden sm:flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors"
+                className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors"
               >
                 Sign In
               </button>
@@ -218,10 +218,12 @@ export default function Layout({ children }) {
         <div className="md:hidden flex border-t" style={{ borderColor: 'var(--border)' }}>
           {MOBILE_NAV.map(({ to, icon: Icon, label }) => {
             const isExact = to === '/'
+            const isProfile = to === '/auth'
+            const profileTo = isProfile && user ? '/profile' : to
             return (
               <NavLink
                 key={to}
-                to={to}
+                to={profileTo}
                 end={isExact}
                 className={({ isActive }) =>
                   `flex-1 flex flex-col items-center py-2 gap-0.5 text-[10px] font-semibold transition-colors ${
@@ -229,8 +231,16 @@ export default function Layout({ children }) {
                   }`
                 }
               >
-                <Icon size={17} />
-                {label}
+                {isProfile && user ? (
+                  profile?.avatar_url
+                    ? <img src={profile.avatar_url} alt="Avatar" className="w-[17px] h-[17px] rounded-full object-cover" />
+                    : <div className="w-[17px] h-[17px] rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-[9px]">
+                        {profile?.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                      </div>
+                ) : (
+                  <Icon size={17} />
+                )}
+                {isProfile ? (user ? 'Profile' : 'Sign In') : label}
               </NavLink>
             )
           })}

@@ -24,6 +24,7 @@ import Dashboard from './pages/admin/Dashboard'
 import Login from './pages/admin/Login'
 import AuthRoute from './components/admin/AuthRoute'
 import Auth from './pages/Auth'
+import Profile from './pages/Profile'
 import { AuthProvider } from './contexts/AuthContext'
 import './index.css'
 
@@ -44,6 +45,7 @@ function AppRoutes() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/stock/:symbol" element={<StockDetail />} />
         <Route path="/cookie-policy" element={<CookiePolicy />} />
         <Route element={<Layout><Routes>
